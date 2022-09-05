@@ -1,0 +1,29 @@
+﻿using EASYTelegramSignalBot.Database;
+using EASYTelegramSignalBot.Telegram;
+using System.Runtime.InteropServices;
+
+namespace EASYTelegramSignalBot
+{
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
+    {
+        [DllImport("Kernel32")]
+        public static extern void AllocConsole();
+
+        public MainWindow()
+        {
+            AllocConsole();
+
+            Settings.LoadSettings();
+            DatabaseContext _DBContext = new();
+            _DBContext.CheckDatabaseSettings();
+            _DBContext.Dispose();
+
+            BotClients.StartBotClients();
+
+            InitializeComponent();
+        }
+    }
+}

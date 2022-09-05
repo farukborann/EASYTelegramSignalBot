@@ -1,0 +1,10 @@
+{
+  "DatabaseConnectionString": "Data Source=DESKTOP-9HMVH73\\SQLEXPRESS;Initial Catalog=EASYTelegramBotDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False",
+  "IsDatabaseEnsureCreated": true,
+  "ResetDatabaseFirstStart": false,
+  "TDITelegramBotToken": "5190701377:AAHwyv2WCJOXoKyqApTSNWNnzf8AUO5fIZk",
+  "PACTelegramBotToken": "5190701377:AAHwyv2WCJOXoKyqApTSNWNnzf8AUO5fIZk",
+  "GeneralGroupTelegramBotToken": "5190701377:AAHwyv2WCJOXoKyqApTSNWNnzf8AUO5fIZk",
+  "GeneralTelegramChannelId": "-1001603147247",
+  "UpdateExpiredUsersTickMunite": 1.0
+}

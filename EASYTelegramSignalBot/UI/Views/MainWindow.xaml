@@ -1,0 +1,30 @@
+﻿<Controls:MetroWindow x:Class="EASYTelegramSignalBot.MainWindow"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        xmlns:ViewModels="clr-namespace:EASYTelegramSignalBot.ViewModels"
+        xmlns:Views="clr-namespace:EASYTelegramSignalBot.Views"
+        Title="Ana Sayfa" Height="720" Width="1280">
+    <Controls:MetroWindow.DataContext>
+        <ViewModels:MainViewModel/>
+    </Controls:MetroWindow.DataContext>
+    <Grid>
+        <TabControl Controls:HeaderedControlHelper.HeaderFontSize="18">
+            <TabItem Header="TDI" Padding="10">
+                <Views:TDI x:Name="TDIView"/>
+            </TabItem>
+            <TabItem Header="RSI" Padding="10">
+
+            </TabItem>
+            <TabItem Header="Kullanıcılar" Padding="10">
+                
+            </TabItem>
+            <TabItem Header="Ayaralar" Padding="10">
+                
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Controls:MetroWindow>

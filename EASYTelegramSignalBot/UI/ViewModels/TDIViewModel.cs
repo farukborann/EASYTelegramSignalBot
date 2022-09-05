@@ -15,6 +15,8 @@ using System.Collections.Generic;
 using Telegram.Bot;
 using WpfClient.MVVM;
 using EASYTelegramSignalBot.Database.Models;
+using EASYTelegramSignalBot.Finance;
+using System.Threading.Tasks;
 
 namespace EASYTelegramSignalBot.ViewModels
 {
@@ -23,6 +25,8 @@ namespace EASYTelegramSignalBot.ViewModels
         public ICommand AddUserCommand { get; set; }
         public ICommand DelUserCommand { get; set; }
         public ICommand SetUISymbolCommand { get; set; }
+        public ICommand AddSymbolCommand { get; set; }
+        public ICommand AddAllSymbolsCommand { get; set; }
         public ICommand DelSymbolCommand { get; set; }
 
         public TDIModel Model { get; set; }
@@ -34,15 +38,18 @@ namespace EASYTelegramSignalBot.ViewModels
             AddUserCommand = new DelegateCommand((o) => AddUser());
             DelUserCommand = new DelegateCommand((o) => DelUser());
             SetUISymbolCommand = new DelegateCommand((o) => SetUISymbol());
+            AddSymbolCommand = new DelegateCommand((o) => AddSymbol());
+            AddAllSymbolsCommand = new DelegateCommand((o) => AddAllSymbols());
             DelSymbolCommand = new DelegateCommand((o) => DelSymbol());
 
-            Model.UISymbol = Settings.TDISymbols.Count() > 0 ? Settings.TDISymbols.First() : "";
+            Model.UISymbol = Settings.TDIBotSymbols.FirstOrDefault() ?? "";
 
-            foreach (var symbol in Settings.TDISymbols)
+            foreach (var symbol in Settings.TDIBotSymbols)
             {
                 if(symbol == Model.UISymbol)
                 {
                     Model.Symbols.Add(new TDI(symbol, Binance.Net.Enums.KlineInterval.OneMinute, UpdateUI, SendSignalMessage) { } );
+                    Model.KlineSeries.Title = symbol;
                     continue;
                 }
 
@@ -77,30 +84,89 @@ namespace EASYTelegramSignalBot.ViewModels
         {
             if (Model.SelectedSymbol == null) return;
             if (Model.SelectedSymbol.Symbol == Model.UISymbol) return;
+            if (Model.Symbols.Count < 1) return;
 
-            Model.Symbols.First(x => x.Symbol == Model.UISymbol).UpdateAction = (string symbol, Dictionary<string, List<object>> values) => { };
+            if(Model.Symbols.Where(x => x.Symbol == Model.UISymbol).Count() > 0)
+            {
+                Model.Symbols.First(x => x.Symbol == Model.UISymbol).UpdateAction = (string symbol, Dictionary<string, List<object>> values) => { };
+            }
             Model.KlineSeriesCollection.ToList().ForEach(x => x.Values.Clear());
             Model.IndicatorsSeriesCollection.ToList().ForEach(x => x.Values.Clear());
             Model.UISymbol = Model.SelectedSymbol.Symbol;
             Model.Symbols.First(x => x.Symbol == Model.UISymbol).UpdateAction = UpdateUI;
+            Model.KlineSeries.Title = Model.UISymbol;
         }
 
         public void DelSymbol()
         {
             if (Model.SelectedSymbol == null) return;
+            var symbol = Model.SelectedSymbol.Symbol;
 
-            if(Model.UISymbol == Model.SelectedSymbol.Symbol)
-            {
-                if(Model.Symbols.Count > 1)
-                {
-
-                }
-            }
-
-            Settings.TDISymbols.Remove(Model.SelectedSymbol.Symbol);
+            Settings.TDIBotSymbols.Remove(Model.SelectedSymbol.Symbol);
             Model.SelectedSymbol.Dispose();
+
+            Settings.TDIBotSymbols.Remove(Model.SelectedSymbol.Symbol);
+            Settings.SaveSettings();
+
             Model.Symbols.Remove(Model.SelectedSymbol);
 
+
+            if(Model.UISymbol == symbol && Model.Symbols.Count > 0)
+            {
+                Model.SelectedSymbol = Model.Symbols[0];
+                SetUISymbol();
+            }
+        }
+
+        public void AddSymbol()
+        {
+            try
+            {
+                if(Model.Symbols.Any(x => x.Symbol == Model.AddSymbolString))
+                {
+                    MessageBox.Show("Bu sembol zaten mevcut.", "Sembol mevcut", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+
+                if (!StaticBinance.Client.SpotApi.ExchangeData.GetExchangeInfoAsync().Result.Data.Symbols.Any(x => x.Name == Model.AddSymbolString))
+                {
+                    MessageBox.Show("Böyle bir sembol bulunamadı!", "Sembol bulunamadı", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                _AddSymbol(Model.AddSymbolString);
+                MessageBox.Show("Sembol başarıyla eklendi.", "Sembol Eklendi", MessageBoxButton.OK);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Bir hata meydana geldi : {ex.Message}", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private bool _AddSymbol(string symbol)
+        {
+            Settings.TDIBotSymbols.Add(symbol);
+            Model.Symbols.Add(new TDI(symbol, Binance.Net.Enums.KlineInterval.OneMinute, (string symbol, Dictionary<string, List<object>> values) => { }, SendSignalMessage) { });
+            Settings.SaveSettings();
+            return true;
+        }
+
+        public async Task AddAllSymbols()
+        {
+            var exchangeInfos = StaticBinance.Client.SpotApi.ExchangeData.GetExchangeInfoAsync().Result;
+            Model.Symbols.Clear();
+            Settings.TDIBotSymbols.Clear();
+            exchangeInfos.Data.Symbols.ToList().ForEach(x =>
+            {
+                try
+                {
+                    _AddSymbol(x.Name);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"{x.Name} eklenirken bir hata meydana geldi : {ex.Message}", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            });
         }
 
         public void UpdateKlines(IEnumerable<Kline> Klines)
@@ -114,8 +180,10 @@ namespace EASYTelegramSignalBot.ViewModels
 
             if (Model.Labels.Last() == Klines.Last()._OpenDate.ToString("h:mm"))
             {
-                var LastChartKline = (OhlcPoint)Model.KlineSeriesCollection[0].Values[^1];
                 var LastKline = Klines.Last();
+                var LastChartKline = (OhlcPoint?)Model.KlineSeriesCollection[0].Values[^1];
+
+                if (LastChartKline == null) return;
                 LastChartKline.Close = (double)LastKline._Close;
                 if (LastChartKline.High < (double)LastKline._High) LastChartKline.High = (double)LastKline._High;
                 if (LastChartKline.Low < (double)LastKline._Low) LastChartKline.Low = (double)LastKline._Low;
@@ -166,9 +234,8 @@ namespace EASYTelegramSignalBot.ViewModels
                 else
                 {
                     User user = Connection.Context.Users.First(x => x.UserName == Model.AddUserString);
-                    user.TDIExpiryDate = user.TDIExpiryDate >= DateTime.Now ?
-                        user.TDIExpiryDate.AddDays(Model.AddUserDays == 0 ? 999999 : Model.AddUserDays) : 
-                        DateTime.Now.AddDays(Model.AddUserDays == 0 ? 999999 : Model.AddUserDays);
+                    var addDays = Model.AddUserDays == 0 ? 999999 : Model.AddUserDays;
+                    user.TDIExpiryDate = user.TDIExpiryDate >= DateTime.Now ? user.TDIExpiryDate.AddDays(addDays) : DateTime.Now.AddDays(addDays);
                     user.TDI = true;
                 }
                 Connection.Context.SaveChanges();
@@ -185,6 +252,7 @@ namespace EASYTelegramSignalBot.ViewModels
         {
             try
             {
+                if (Model.SelectedUser == null) return;
                 Connection.Context.DelUser(Model.SelectedUser);
                 Connection.Context.SaveChanges();
 

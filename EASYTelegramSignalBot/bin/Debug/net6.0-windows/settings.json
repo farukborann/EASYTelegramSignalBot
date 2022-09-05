@@ -6,5 +6,11 @@
   "PACTelegramBotToken": "5190701377:AAHwyv2WCJOXoKyqApTSNWNnzf8AUO5fIZk",
   "GeneralGroupTelegramBotToken": "5190701377:AAHwyv2WCJOXoKyqApTSNWNnzf8AUO5fIZk",
   "GeneralTelegramChannelId": "-1001603147247",
+  "TDIBotSymbols": [
+    "ETHUSDT",
+    "EOSUSDT",
+    "ETHBTC",
+    "EOSBTC"
+  ],
   "UpdateExpiredUsersTickMunite": 1.0
 }

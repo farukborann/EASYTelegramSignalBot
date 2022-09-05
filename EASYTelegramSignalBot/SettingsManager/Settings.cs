@@ -61,6 +61,6 @@ namespace EASYTelegramSignalBot
         public static string GeneralTelegramChannelId => _Settings.GeneralTelegramChannelId;
         public static double UpdateExpiredUsersTickMunite => _Settings.UpdateExpiredUsersTickMunite;
 
-        public static List<string> TDISymbols => new() { "BTCUSDT", "ETHUSDT" };
+        public static List<string> TDIBotSymbols => _Settings.TDIBotSymbols;
     }
 }

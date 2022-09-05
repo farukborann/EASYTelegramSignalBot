@@ -48,7 +48,7 @@ namespace EASYTelegramSignalBot.Telegram
             if (message.Text is not { } messageText)
                 return Task.Delay(0);
 
-            if (messageText == "/start") DefaultMessage(botClient, message);
+            if (messageText == "/start") DefaultMessage(botClient, message).WaitAsync(new TimeSpan(0,0,5));
 
             return Task.Delay(0);
         }

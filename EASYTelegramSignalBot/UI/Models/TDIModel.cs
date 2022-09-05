@@ -10,6 +10,8 @@ using WpfClient.MVVM;
 using System.Windows.Media;
 using EASYTelegramSignalBot.Finance.Models;
 using EASYTelegramSignalBot.Database.Models;
+using System.Windows;
+using System;
 
 namespace EASYTelegramSignalBot.Models
 {
@@ -23,11 +25,11 @@ namespace EASYTelegramSignalBot.Models
                 KlineSeries
             };
 
-            FastMA = new()   { Title = "RSI Price Line", Stroke=Brushes.Green, PointGeometrySize=0, Values = new ChartValues<double>(), Fill = Brushes.Transparent };
-            SlowMA = new()   { Title = "Trade Signal Line", Stroke = Brushes.Red, PointGeometrySize = 0,Values = new ChartValues<double>(), Fill = Brushes.Transparent };
-            UpVB = new()     { Title = "Up Votality Band", Stroke = Brushes.Blue, PointGeometrySize = 0, Values = new ChartValues<double>(), Fill = Brushes.Transparent };
-            MiddleVB = new() { Title = "Middle Votality Band", Stroke = Brushes.Yellow, PointGeometrySize = 0, Values = new ChartValues<double>(), Fill = Brushes.Transparent };
-            DownVB = new()   { Title = "Down Votality Band", Stroke = Brushes.Blue, PointGeometrySize = 0, Values = new ChartValues<double>(), Fill = Brushes.Transparent };
+            FastMA = new()   { Title = "RSI Price Line", LineSmoothness=0, Stroke=Brushes.Green, PointGeometrySize=0, Values = new ChartValues<double>(), Fill = Brushes.Transparent };
+            SlowMA = new()   { Title = "Trade Signal Line", LineSmoothness = 0, Stroke = Brushes.Red, PointGeometrySize = 0,Values = new ChartValues<double>(), Fill = Brushes.Transparent };
+            UpVB = new()     { Title = "Up Votality Band", LineSmoothness = 0, Stroke = Brushes.Blue, PointGeometrySize = 0, Values = new ChartValues<double>(), Fill = Brushes.Transparent };
+            MiddleVB = new() { Title = "Middle Votality Band", LineSmoothness = 0, Stroke = Brushes.Yellow, PointGeometrySize = 0, Values = new ChartValues<double>(), Fill = Brushes.Transparent };
+            DownVB = new()   { Title = "Down Votality Band", LineSmoothness = 0, Stroke = Brushes.Blue, PointGeometrySize = 0, Values = new ChartValues<double>(), Fill = Brushes.Transparent };
             IndicatorsSeriesCollection = new()
             {
                 FastMA,
@@ -36,6 +38,12 @@ namespace EASYTelegramSignalBot.Models
                 MiddleVB,
                 DownVB
             };
+
+            UISymbol = Symbols.Count > 0 ? Symbols[0].Symbol : "";
+            labels = new();
+            symbols = new();
+            addUserString = "";
+            addSymbolString = "";
         }
 
         /* LiveCharts */
@@ -56,23 +64,15 @@ namespace EASYTelegramSignalBot.Models
             set
             {
                 labels = value;
-                OnPropertyChanged(nameof(Labels));
+                RaisePropertyChangedEvent(nameof(Labels));
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged(string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        /* Live Charts End */
-
-        private ObservableCollection<User> users { get; set; }
+        private ObservableCollection<User>? users { get; set; }
         public ObservableCollection<User> Users
         {
             get
             {
-                Connection.Context.Users.Load();
                 return users ??= Connection.Context.Users.Local.ToObservableCollection();
             }
             set

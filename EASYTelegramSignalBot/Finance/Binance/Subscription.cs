@@ -38,34 +38,27 @@ namespace EASYTelegramSignalBot.Finance.Binance
             Klines = new();
             GetKlines();
 
-            switch (type)
+            CallResult = Type switch
             {
-                case SubscriptionType.CoinFutures:
-                    CallResult = StaticBinance.SocketClient.CoinFuturesStreams.SubscribeToKlineUpdatesAsync(
-                        Symbol,
-                        Interval,
-                        data => { RunFuncs(data); },
-                        CancellationTokenSource.Token
-                    );
-                    break;
-                case SubscriptionType.Spot:
-                    CallResult = StaticBinance.SocketClient.SpotStreams.SubscribeToKlineUpdatesAsync(
-                        Symbol,
-                        Interval,
-                        data => { RunFuncs(data); },
-                        CancellationTokenSource.Token
-                    );
-                    break;
-                case SubscriptionType.UsdFutures:
-                default:
-                    CallResult = StaticBinance.SocketClient.UsdFuturesStreams.SubscribeToKlineUpdatesAsync(
-                        Symbol,
-                        Interval,
-                        data => { RunFuncs(data); },
-                        CancellationTokenSource.Token
-                    );
-                    break;
-            }
+                SubscriptionType.CoinFutures => StaticBinance.SocketClient.CoinFuturesStreams.SubscribeToKlineUpdatesAsync(
+                                        Symbol,
+                                        Interval,
+                                        data => { RunFuncs(data); },
+                                        CancellationTokenSource.Token
+                                    ),
+                SubscriptionType.Spot => StaticBinance.SocketClient.SpotStreams.SubscribeToKlineUpdatesAsync(
+                                        Symbol,
+                                        Interval,
+                                        data => { RunFuncs(data); },
+                                        CancellationTokenSource.Token
+                                    ),
+                _ => StaticBinance.SocketClient.UsdFuturesStreams.SubscribeToKlineUpdatesAsync(
+                                        Symbol,
+                                        Interval,
+                                        data => { RunFuncs(data); },
+                                        CancellationTokenSource.Token
+                                    ),
+            };
         }
 
         private void RunFuncs(DataEvent<IBinanceStreamKlineData> data)
@@ -104,23 +97,37 @@ namespace EASYTelegramSignalBot.Finance.Binance
             }
         }
 
+        List<Kline> GetKlinesAsync(string Symbol, KlineInterval Interval, int Limit, DateTime? endTime = null)
+        {
+            switch (Type)
+            {
+                case SubscriptionType.CoinFutures:
+                    return StaticBinance.Client.CoinFuturesApi.ExchangeData.GetKlinesAsync(Symbol, Interval, limit: Limit, endTime: endTime).Result.Data.ToKlines();
+                case SubscriptionType.Spot:
+                    return StaticBinance.Client.SpotApi.ExchangeData.GetKlinesAsync(Symbol, Interval, limit: Limit, endTime: endTime).Result.Data.ToKlines();
+                case SubscriptionType.UsdFutures:
+                default:
+                    return StaticBinance.Client.UsdFuturesApi.ExchangeData.GetKlinesAsync(Symbol, Interval, limit: Limit, endTime: endTime).Result.Data.ToKlines();
+            }
+        }
+
         public void GetKlines()
         {
             if (Limit < 1500)
             {
-                StaticBinance.Client.UsdFuturesApi.ExchangeData.GetKlinesAsync(Symbol, Interval, limit: Limit).Result.Data.ToKlines().ForEach(x => Klines.Add(x));
+                GetKlinesAsync(Symbol, Interval, Limit).ForEach(x => Klines.Add(x));
                 return;
             }
-            StaticBinance.Client.UsdFuturesApi.ExchangeData.GetKlinesAsync(Symbol, Interval, limit: 1500).Result.Data.ToKlines().ForEach(x => Klines.Add(x));
+            GetKlinesAsync(Symbol, Interval, 1500).ForEach(x => Klines.Add(x));
             int GetKlinesCount = Limit - 1500;
             for (; GetKlinesCount > 1500; GetKlinesCount-=1500)
             {
-                StaticBinance.Client.UsdFuturesApi.ExchangeData.GetKlinesAsync(Symbol, Interval, limit: 1500, endTime: Klines[0].Date.AddSeconds(-1 * (int)Interval)).Result.Data.ToKlines().ForEach(x => Klines.Add(x));
+                GetKlinesAsync(Symbol, Interval, 1500, endTime: Klines[0].Date.AddSeconds(-1 * (int)Interval)).ForEach(x => Klines.Add(x));
             }
 
             if(GetKlinesCount > 0)
             {
-                StaticBinance.Client.UsdFuturesApi.ExchangeData.GetKlinesAsync(Symbol, Interval, limit: GetKlinesCount).Result.Data.ToKlines().ForEach(x => Klines.Add(x));
+                GetKlinesAsync(Symbol, Interval, GetKlinesCount).ForEach(x => Klines.Add(x));
             }
         }
 

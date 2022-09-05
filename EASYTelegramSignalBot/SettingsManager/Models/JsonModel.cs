@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace EASYTelegramSignalBot.SettingsManager.Models
 {
@@ -25,6 +26,11 @@ namespace EASYTelegramSignalBot.SettingsManager.Models
 
         [JsonProperty("GeneralTelegramChannelId")]
         public string GeneralTelegramChannelId { get; set; }
+
+
+        [JsonProperty("TDIBotSymbols")]
+        public List<string> TDIBotSymbols { get; set; }
+
 
         [JsonProperty("UpdateExpiredUsersTickMunite")]
         public double UpdateExpiredUsersTickMunite { get; set; }

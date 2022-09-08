@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         xmlns:ViewModels="clr-namespace:EASYTelegramSignalBot.ViewModels"
         xmlns:Views="clr-namespace:EASYTelegramSignalBot.Views"
-        Title="Ana Sayfa" Height="720" Width="1280">
+        Title="EASY Telegram Bot" Height="720" Width="1280">
     <Controls:MetroWindow.DataContext>
         <ViewModels:MainViewModel/>
     </Controls:MetroWindow.DataContext>

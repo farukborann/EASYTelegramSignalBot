@@ -13,20 +13,20 @@ namespace EASYTelegramSignalBot.Finance.Binance
         private decimal __Close { get; set; }
         private decimal __Volume { get; set; }
 
-        public DateTime _OpenDate{ get { return __OpenDate; } set { __OpenDate = value; } }
-        public DateTime _CloseDate{ get { return __CloseDate; } set { __CloseDate = value; } }
-        public decimal _Open { get { return __Open; } set { __Open = value; } }
-        public decimal _High{ get { return __High; } set { __High = value; } }
-        public decimal _Low{ get { return __Low; } set { __Low = value; } }
-        public decimal _Close{ get { return __Close; } set { __Close = value; } }
-        public decimal _Volume{ get { return __Volume; } set { __Volume = value; } }
+        public DateTime _OpenDate { get => __OpenDate; set => __OpenDate = value; }
+        public DateTime _CloseDate { get => __CloseDate; set => __CloseDate = value; }
+        public decimal _Open { get => __Open; set => __Open = value; }
+        public decimal _High { get => __High; set => __High = value; }
+        public decimal _Low { get => __Low; set => __Low = value; }
+        public decimal _Close { get => __Close; set => __Close = value; }
+        public decimal _Volume { get => __Volume; set => __Volume = value; }
 
         //IQuote Parts
-        public DateTime Date { get { return _OpenDate; } set { _OpenDate = value; } }
-        public decimal Open { get { return _Open; } set { _Open = value; } }
-        public decimal High { get { return _High; } set { _High = value; } }
-        public decimal Low { get { return _Low; } set { _Low = value; } }
-        public decimal Close { get { return _Close; } set { _Close = value; } }
-        public decimal Volume { get { return _Volume; } set { _Volume = value; } }
+        public DateTime Date { get => _OpenDate; set => _OpenDate = value; }
+        public decimal Open { get => _Open; set => _Open = value; }
+        public decimal High { get => _High; set => _High = value; }
+        public decimal Low { get => _Low; set => _Low = value; }
+        public decimal Close { get => _Close; set => _Close = value; }
+        public decimal Volume { get => _Volume; set => _Volume = value; }
     }
 }

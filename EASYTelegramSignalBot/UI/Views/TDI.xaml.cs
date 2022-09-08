@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using EASYTelegramSignalBot.ViewModels;
+using System.Windows.Controls;
 
 namespace EASYTelegramSignalBot.Views
 {
@@ -10,6 +11,11 @@ namespace EASYTelegramSignalBot.Views
         public TDI()
         {
             InitializeComponent();
+        }
+
+        private void UserSymbolsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ((TDIViewModel)DataContext).UserSymbolsListSelectionChanged();
         }
     }
 }

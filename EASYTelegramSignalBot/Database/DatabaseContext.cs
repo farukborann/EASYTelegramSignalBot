@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EASYTelegramSignalBot.Database.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
-using EASYTelegramSignalBot.Database.Models;
 
 namespace EASYTelegramSignalBot.Database
 {
@@ -8,16 +8,16 @@ namespace EASYTelegramSignalBot.Database
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(Settings.DatabaseConnectionString);
+            optionsBuilder.UseSqlServer(Settings.DatabaseSettings.DatabaseConnectionString);
         }
 
         public void CheckDatabaseSettings()
         {
-            if (Settings.ResetDatabaseFirstStart)
+            if (Settings.DatabaseSettings.ResetDatabaseFirstStart)
             {
                 ResetDatabase();
             }
-            else if (!Settings.IsDatabaseEnsureCreated)
+            else if (!Settings.DatabaseSettings.IsDatabaseEnsureCreated)
             {
                 CreateDatabase();
             }

@@ -1,14 +1,13 @@
-﻿using Newtonsoft.Json;
-using System.IO;
+﻿using EASYTelegramSignalBot.SettingsManager.Models;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using EASYTelegramSignalBot.SettingsManager.Models;
+using System.IO;
 
 namespace EASYTelegramSignalBot
 {
     public static class Settings
     {
-        private static JsonModel _Settings { get; set; }
+        private static SettingsManager.Models.Settings _Settings { get; set; }
 
         public static void LoadSettings()
         {
@@ -16,12 +15,12 @@ namespace EASYTelegramSignalBot
             {
                 using StreamReader r = new("settings.json");
                 string json = r.ReadToEnd();
-                _Settings = JsonConvert.DeserializeObject<JsonModel>(json);
+                _Settings = JsonConvert.DeserializeObject<SettingsManager.Models.Settings>(json);
             }
             catch
             {
                 Console.WriteLine("Ayarlar Yüklenemedi !");
-                _Settings = new JsonModel();
+                _Settings = new SettingsManager.Models.Settings();
             }
         }
 
@@ -38,29 +37,21 @@ namespace EASYTelegramSignalBot
                 Console.WriteLine("Ayarlar Kaydedilemedi !");
             }
         }
-        
+
         public static void SetDatabaseEnsureCreated(bool isCreated = true)
         {
-            _Settings.IsDatabaseEnsureCreated = isCreated;
+            _Settings.DatabaseSettings.IsDatabaseEnsureCreated = isCreated;
             SaveSettings();
         }
-        
+
         public static void DatabaseResetted()
         {
-            _Settings.ResetDatabaseFirstStart = false;
+            _Settings.DatabaseSettings.ResetDatabaseFirstStart = false;
             SetDatabaseEnsureCreated(false);
         }
 
-        public static string DatabaseConnectionString => _Settings.DatabaseConnectionString;
-        public static bool IsDatabaseEnsureCreated => _Settings.IsDatabaseEnsureCreated;
-        public static bool ResetDatabaseFirstStart => _Settings.ResetDatabaseFirstStart;
-
-        public static string TDITelegramBotToken => _Settings.TDITelegramBotToken;
-        public static string PACTelegramBotToken => _Settings.PACTelegramBotToken;
-        public static string GeneralGroupTelegramBotToken => _Settings.GeneralGroupTelegramBotToken;
-        public static string GeneralTelegramChannelId => _Settings.GeneralTelegramChannelId;
-        public static double UpdateExpiredUsersTickMunite => _Settings.UpdateExpiredUsersTickMunite;
-
-        public static List<string> TDIBotSymbols => _Settings.TDIBotSymbols;
+        public static Databasesettings DatabaseSettings => _Settings.DatabaseSettings;
+        public static Telegramsettings TelegramSettings => _Settings.TelegramSettings;
+        public static Botssettings BotsSettings => _Settings.BotsSettings;
     }
 }

@@ -17,7 +17,10 @@ namespace WpfClient.MVVM
             _action(parameter);
         }
 
-        public bool CanExecute(object? parameter) => true;
+        public bool CanExecute(object? parameter)
+        {
+            return true;
+        }
 
         public event EventHandler? CanExecuteChanged;
     }

@@ -20,8 +20,10 @@ namespace EASYTelegramSignalBot.Database
             Context = new();
             Context.Users.Load();
 
-            refreshContextTimer = new DispatcherTimer();
-            refreshContextTimer.Interval = new TimeSpan(0, 5, 0);
+            refreshContextTimer = new DispatcherTimer
+            {
+                Interval = new TimeSpan(0, 5, 0)
+            };
             refreshContextTimer.Tick += new EventHandler(Refresh);
             refreshContextTimer.Start();
         }

@@ -1,7 +1,6 @@
 ﻿using EASYTelegramSignalBot.Finance.Binance;
 using System;
 using System.Collections.Generic;
-using static EASYTelegramSignalBot.Finance.Helpers;
 
 namespace EASYTelegramSignalBot.Finance.Models
 {
@@ -9,7 +8,7 @@ namespace EASYTelegramSignalBot.Finance.Models
     {
         public Indicator Creator { get; set; }
         public Action<List<Kline>> Action { get; set; }
-        public TriggerType TriggerType { get; set; }
+        public Enums.TriggerType TriggerType { get; set; }
         public int KlineCount { get; set; }
     }
 }

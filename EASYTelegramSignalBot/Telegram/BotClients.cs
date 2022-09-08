@@ -8,16 +8,16 @@ namespace EASYTelegramSignalBot.Telegram
 {
     public static class BotClients
     {
-        static CancellationTokenSource CancelToken { get; set; }
+        private static CancellationTokenSource CancelToken { get; set; }
         public static TelegramBotClient TDIClient { get; set; }
         public static TelegramBotClient GeneralClient { get; set; }
 
         public static void StartBotClients()
         {
-            TDIClient = new(Settings.TDITelegramBotToken);
+            TDIClient = new(Settings.TelegramSettings.TDIBots[0]);
             CancelToken = new CancellationTokenSource();
 
-            var receiverOptions = new ReceiverOptions()
+            ReceiverOptions? receiverOptions = new ReceiverOptions()
             {
                 AllowedUpdates = Array.Empty<UpdateType>(),
                 ThrowPendingUpdates = true
@@ -27,7 +27,7 @@ namespace EASYTelegramSignalBot.Telegram
                                pollingErrorHandler: UpdateHandlers.PollingErrorHandler,
                                receiverOptions: receiverOptions,
                                cancellationToken: CancelToken.Token);
-            GeneralClient = new(Settings.GeneralGroupTelegramBotToken);
+            GeneralClient = new(Settings.TelegramSettings.GeneralBots[0]);
         }
     }
 }

@@ -1,11 +1,43 @@
 {
-  "DatabaseConnectionString": "Data Source=DESKTOP-9HMVH73\\SQLEXPRESS;Initial Catalog=EASYTelegramBotDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False",
-  "IsDatabaseEnsureCreated": false,
-  "ResetDatabaseFirstStart": false,
-  "TDITelegramBotToken": "5190701377:AAHwyv2WCJOXoKyqApTSNWNnzf8AUO5fIZk",
-  "PACTelegramBotToken": "5190701377:AAHwyv2WCJOXoKyqApTSNWNnzf8AUO5fIZk",
-  "GeneralGroupTelegramBotToken": "5190701377:AAHwyv2WCJOXoKyqApTSNWNnzf8AUO5fIZk",
-  "GeneralTelegramChannelId": "-1001603147247",
-  "UpdateExpiredUsersTickMunite": 1.0,
-  "TDIBotSymbols": ["BTCUSDT"]
+  "DatabaseSettings": {
+    "DatabaseConnectionString": "Data Source=DESKTOP-9HMVH73\\SQLEXPRESS;Initial Catalog=EASYTelegramBotDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False",
+    "IsDatabaseEnsureCreated": true,
+    "ResetDatabaseFirstStart": false
+  },
+
+  "TelegramSettings": {
+    "GeneralGroups": [ "-1001603147247" ],
+    "GeneralBots": [ "5190701377:AAHwyv2WCJOXoKyqApTSNWNnzf8AUO5fIZk" ],
+    "TDIGroups": [ "-1001603147247" ],
+    "TDIBots": [ "5190701377:AAHwyv2WCJOXoKyqApTSNWNnzf8AUO5fIZk" ]
+  },
+
+  "BotsSettings": {
+    "UpdateExpiredUsersTickMunite": 1.0,
+    "GeneralSettings": {
+
+    },
+    "TDISettings": {
+      "Symbols": [
+        "BTCUSDT",
+        "ETHUSDT",
+        "EOSUSDT",
+        "SHIBUSDT",
+        "ADAUSDT",
+        "XRPUSDT",
+        "SOLUSDT"
+      ],
+      "SignalMessages": {
+        "Buy": "Alım Sinyali Geldi => {Symbol}",
+        "Sell": "Sat Sinyali Geldi => {Symbol}",
+        "Exit": "Çık Sinyali Geldi => {Symbol}"
+      },
+      "RSIPeriot": 13,
+      "VotalityBandPeriot": 34,
+      "RSIPLPeriot": 2,
+      "TSLPeriot": 7,
+      "RSIOversoldLevel": 32,
+      "RSIOverboughtLevet": 68
+    }
+  }
 }

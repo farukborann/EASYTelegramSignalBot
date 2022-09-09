@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET6_0;NETCOREAPP
 C:\Users\Ömer Faruk BORAN\Desktop\Workspace\EASYTelegramSignalBot\EASYTelegramSignalBot\App.xaml
-2-1547037193
+41551277395
 
-30-1073979872
+42-643641706
 226865356104
-UI\Views\MainWindow.xaml;UI\Views\TDI.xaml;
+UI\Views\MainWindow.xaml;UI\Views\News.xaml;UI\Views\RSI.xaml;UI\Views\TDI.xaml;
 
 False
 

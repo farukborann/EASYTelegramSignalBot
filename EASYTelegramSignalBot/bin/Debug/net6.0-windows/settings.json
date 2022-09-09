@@ -8,34 +8,68 @@
     "GeneralGroups": [
       "-1001603147247"
     ],
-    "GeneralBots": [
-      "5190701377:AAHwyv2WCJOXoKyqApTSNWNnzf8AUO5fIZk"
-    ],
+    "GeneralBot": "5190701377:AAHwyv2WCJOXoKyqApTSNWNnzf8AUO5fIZk",
     "TDIGroups": [
       "-1001603147247"
     ],
-    "TDIBots": [
-      "5190701377:AAHwyv2WCJOXoKyqApTSNWNnzf8AUO5fIZk"
-    ]
+    "TDIBot": "5190701377:AAHwyv2WCJOXoKyqApTSNWNnzf8AUO5fIZk",
+    "RSIGroups": [
+      "-1001603147247"
+    ],
+    "RSIBot": "5761798395:AAEWuqcopafN5b5XhZmDHkBLRa7stzAMP04",
+    "NewsGroups": [
+      "-1001603147247"
+    ],
+    "NewsBot": "5712778575:AAF0o0DjH88_kfFUPpV6ScSz0B8W3x-sm3k"
   },
   "BotsSettings": {
     "UpdateExpiredUsersTickMunite": 1.0,
     "GeneralSettings": {},
     "TDISettings": {
       "Symbols": [
-        "BTCUSDT"
+        "BTCUSDT",
+        "ETHUSDT",
+        "EOSUSDT",
+        "SHIBUSDT",
+        "ADAUSDT",
+        "XRPUSDT",
+        "SOLUSDT"
       ],
       "SignalMessages": {
         "Buy": "Alım Sinyali Geldi => {Symbol}",
         "Sell": "Sat Sinyali Geldi => {Symbol}",
         "Exit": "Çık Sinyali Geldi => {Symbol}"
       },
-      "RSIPeriot": 11,
+      "RSIPeriot": 13,
       "VotalityBandPeriot": 34,
       "RSIPLPeriot": 2,
       "TSLPeriot": 7,
       "RSIOversoldLevel": 32,
       "RSIOverboughtLevet": 68
+    },
+    "RSISettings": {
+      "Symbols": [
+        "BTCUSDT",
+        "ETHUSDT",
+        "EOSUSDT",
+        "SOLUSDT",
+        "XRPUSDT",
+        "SHIBUSDT",
+        "ADAUSDT"
+      ],
+      "SignalMessages": {
+        "Overbought": "RSI aşırı alımı aştı => {Symbol}",
+        "Oversold": "RSI aşırı satışı aştı => {Symbol}",
+        "BetweenLevels": "Rsı yola geldi => {Symbol}"
+      },
+      "RSIPeriot": 14,
+      "RSIOversoldLevel": 29,
+      "RSIOverboughtLevet": 71
+    },
+    "NewsSettings": {
+      "Key": "18cc0162bdb2b0a18f0e57185da26f97a191d362",
+      "Interval": 60,
+      "Message": "Yeni haber geldi\n\n{Title}\nİlgili Coinler\n{Coins}\nHaber Linki\n{Link}"
     }
   }
 }

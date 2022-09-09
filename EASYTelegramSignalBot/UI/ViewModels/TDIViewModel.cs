@@ -178,6 +178,13 @@ namespace EASYTelegramSignalBot.ViewModels
                     Connection.Context.SaveChanges();
                     MessageBox.Show("Kullanıcı başarıyla eklendi.", "Kullanıcı Eklendi", MessageBoxButton.OK);
                 }
+                else if (Connection.Context.Users.Any(x => x.Username == Model.AddUserString && x.TDI == false))
+                {
+                    var user = Connection.Context.Users.First(x => x.Username == Model.AddUserString && x.TDI == false);
+                    user.TDI = true;
+                    Connection.Context.SaveChanges();
+                    MessageBox.Show("Kullanıcı başarıyla eklendi.", "Kullanıcı Eklendi", MessageBoxButton.OK);
+                }
                 else
                 {
                     User user = Connection.Context.Users.First(x => x.Username == Model.AddUserString);
@@ -195,7 +202,8 @@ namespace EASYTelegramSignalBot.ViewModels
             try
             {
                 if (Model.SelectedUser == null) return;
-                Connection.Context.DelUser(Model.SelectedUser);
+                var user = Connection.Context.Users.First(x => x.Username == Model.AddUserString && x.TDI == true);
+                user.TDI = false;
                 Connection.Context.SaveChanges();
 
                 MessageBox.Show("Kullanıcı başarıyla silindi.", "Kullanıcı Silindi", MessageBoxButton.OK);

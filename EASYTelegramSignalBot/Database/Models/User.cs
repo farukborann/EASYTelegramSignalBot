@@ -13,6 +13,8 @@ namespace EASYTelegramSignalBot.Database.Models
         public long ChatId { get; set; }
 
         public bool TDI { get; set; }
+        public bool News { get; set; }
+        public DateTime? NewsExpiryDate { get; set; }
 
         public string? TDISymbolValues { get; set; }
 

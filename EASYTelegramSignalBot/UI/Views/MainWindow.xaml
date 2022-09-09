@@ -17,13 +17,10 @@
                 <Views:TDI x:Name="TDIView"/>
             </TabItem>
             <TabItem Header="RSI" Padding="10">
-
+                <Views:RSI x:Name="RSIView"/>
             </TabItem>
-            <TabItem Header="Kullanıcılar" Padding="10">
-                
-            </TabItem>
-            <TabItem Header="Ayaralar" Padding="10">
-                
+            <TabItem Header="Haberler" Padding="10">
+                <Views:News x:Name="NewsView" />
             </TabItem>
         </TabControl>
     </Grid>

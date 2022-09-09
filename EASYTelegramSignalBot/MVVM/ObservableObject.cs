@@ -6,11 +6,6 @@ namespace WpfClient.MVVM
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public PropertyChangedEventHandler? GetHandler()
-        {
-            return PropertyChanged;
-        }
-
         public void RaisePropertyChangedEvent(params string[] propertyNames)
         {
             foreach (string? propertyName in propertyNames)

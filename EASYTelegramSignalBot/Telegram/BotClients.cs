@@ -10,11 +10,15 @@ namespace EASYTelegramSignalBot.Telegram
     {
         private static CancellationTokenSource CancelToken { get; set; }
         public static TelegramBotClient TDIClient { get; set; }
+        public static TelegramBotClient RSIClient { get; set; }
+        public static TelegramBotClient NewsClient { get; set; }
         public static TelegramBotClient GeneralClient { get; set; }
 
         public static void StartBotClients()
         {
-            TDIClient = new(Settings.TelegramSettings.TDIBots[0]);
+            TDIClient = new(Settings.TelegramSettings.TDIBot);
+            RSIClient = new(Settings.TelegramSettings.RSIBot);
+            NewsClient = new(Settings.TelegramSettings.NewsBot);
             CancelToken = new CancellationTokenSource();
 
             ReceiverOptions? receiverOptions = new ReceiverOptions()
@@ -23,11 +27,22 @@ namespace EASYTelegramSignalBot.Telegram
                 ThrowPendingUpdates = true
             };
 
-            TDIClient.StartReceiving(updateHandler: UpdateHandlers.HandleUpdateAsync,
-                               pollingErrorHandler: UpdateHandlers.PollingErrorHandler,
+            TDIClient.StartReceiving(updateHandler: TDIUpdateHandlers.HandleUpdateAsync,
+                               pollingErrorHandler: TDIUpdateHandlers.PollingErrorHandler,
                                receiverOptions: receiverOptions,
                                cancellationToken: CancelToken.Token);
-            GeneralClient = new(Settings.TelegramSettings.GeneralBots[0]);
+
+            RSIClient.StartReceiving(updateHandler: RSIUpdateHandlers.HandleUpdateAsync,
+                   pollingErrorHandler: RSIUpdateHandlers.PollingErrorHandler,
+                   receiverOptions: receiverOptions,
+                   cancellationToken: CancelToken.Token);
+
+            NewsClient.StartReceiving(updateHandler: NewsUpdateHandlers.HandleUpdateAsync,
+                   pollingErrorHandler: NewsUpdateHandlers.PollingErrorHandler,
+                   receiverOptions: receiverOptions,
+                   cancellationToken: CancelToken.Token);
+
+            GeneralClient = new(Settings.TelegramSettings.GeneralBot);
         }
     }
 }

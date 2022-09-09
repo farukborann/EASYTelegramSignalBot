@@ -72,3 +72,7 @@ C:\Users\Ömer Faruk BORAN\Desktop\Workspace\EASYTelegramSignalBot\EASYTelegramS
 C:\Users\Ömer Faruk BORAN\Desktop\Workspace\EASYTelegramSignalBot\EASYTelegramSignalBot\obj\Debug\net6.0-windows\UI\Views\TDI.g.cs
 C:\Users\Ömer Faruk BORAN\Desktop\Workspace\EASYTelegramSignalBot\EASYTelegramSignalBot\obj\Debug\net6.0-windows\UI\Views\MainWindow.baml
 C:\Users\Ömer Faruk BORAN\Desktop\Workspace\EASYTelegramSignalBot\EASYTelegramSignalBot\obj\Debug\net6.0-windows\UI\Views\TDI.baml
+C:\Users\Ömer Faruk BORAN\Desktop\Workspace\EASYTelegramSignalBot\EASYTelegramSignalBot\obj\Debug\net6.0-windows\UI\Views\RSI.g.cs
+C:\Users\Ömer Faruk BORAN\Desktop\Workspace\EASYTelegramSignalBot\EASYTelegramSignalBot\obj\Debug\net6.0-windows\UI\Views\RSI.baml
+C:\Users\Ömer Faruk BORAN\Desktop\Workspace\EASYTelegramSignalBot\EASYTelegramSignalBot\obj\Debug\net6.0-windows\UI\Views\News.g.cs
+C:\Users\Ömer Faruk BORAN\Desktop\Workspace\EASYTelegramSignalBot\EASYTelegramSignalBot\obj\Debug\net6.0-windows\UI\Views\News.baml

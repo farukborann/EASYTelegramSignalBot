@@ -102,11 +102,11 @@ namespace EASYTelegramSignalBot.Finance.Indicators
                 if (RSI_PL.Equals(LastSignalType)) return;
 
                 Task.Run(() => SignalAction(Symbol, RSI_PL));
-                Console.WriteLine($"TDI Signal !!! {Symbol} => {nameof(RSI_PL)}, {Enum.GetName(typeof(Enums.SignalType), RSI_PL)}");
+                Console.WriteLine($"TDI Signal !!! {Symbol} => {Enum.GetName(typeof(Enums.SignalType), RSI_PL)}");
                 LastSignalType = RSI_PL;
             }
 
-            Console.WriteLine($"RSI PL {Symbol} => {Enum.GetName(typeof(Enums.SignalType), RSI_PL)} || TSL => {Enum.GetName(typeof(Enums.SignalType), TSL)} || MBL => {Enum.GetName(typeof(Enums.SignalType), MBL)} || VB => {Enum.GetName(typeof(Enums.SignalType), VB)}");
+            Console.WriteLine($"{Symbol} RSI PL => {Enum.GetName(typeof(Enums.SignalType), RSI_PL)} || TSL => {Enum.GetName(typeof(Enums.SignalType), TSL)} || MBL => {Enum.GetName(typeof(Enums.SignalType), MBL)} || VB => {Enum.GetName(typeof(Enums.SignalType), VB)}");
         }
     }
 }

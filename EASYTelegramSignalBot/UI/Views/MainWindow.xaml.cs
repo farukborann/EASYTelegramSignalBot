@@ -1,5 +1,4 @@
-﻿using EASYTelegramSignalBot.Database;
-using EASYTelegramSignalBot.NewsBot;
+﻿using EASYTelegramSignalBot.NewsBot;
 using EASYTelegramSignalBot.Telegram;
 using System.Runtime.InteropServices;
 
@@ -18,12 +17,9 @@ namespace EASYTelegramSignalBot
             AllocConsole();
 
             Settings.LoadSettings();
-            DatabaseContext _DBContext = new();
-            _DBContext.CheckDatabaseSettings();
-            _DBContext.Dispose();
 
             BotClients.StartBotClients();
-            CryptopanicNewsBot newsBot = new();
+            CryptopanicNewsBot _ = new();
 
             InitializeComponent();
         }

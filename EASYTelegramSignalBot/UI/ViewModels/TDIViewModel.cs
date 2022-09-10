@@ -410,6 +410,8 @@ namespace EASYTelegramSignalBot.ViewModels
             Settings.BotsSettings.TDISettings.RSIOversoldLevel = Model.RSIOversoldLevel;
             Settings.BotsSettings.TDISettings.RSIOverboughtLevet = Model.RSIOverboughtLevel;
 
+            Settings.BotsSettings.TDISettings.MinSignalPeriot = Model.MinSignalPeriot;
+
             Settings.SaveSettings();
 
             MessageBox.Show("Ayarlar başarıyla kaydedildi.", "Ayarlar kaydedildi", MessageBoxButton.OK);
@@ -427,6 +429,8 @@ namespace EASYTelegramSignalBot.ViewModels
             Model.VBPeriot = Settings.BotsSettings.TDISettings.VotalityBandPeriot;
             Model.RSIOversoldLevel = Settings.BotsSettings.TDISettings.RSIOversoldLevel;
             Model.RSIOverboughtLevel = Settings.BotsSettings.TDISettings.RSIOverboughtLevet;
+
+            Model.MinSignalPeriot = Settings.BotsSettings.TDISettings.MinSignalPeriot;
         }
         #endregion
     }

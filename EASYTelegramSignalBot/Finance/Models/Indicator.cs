@@ -3,6 +3,7 @@ using EASYTelegramSignalBot.Finance.Binance;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace EASYTelegramSignalBot.Finance.Models
 {
@@ -39,7 +40,7 @@ namespace EASYTelegramSignalBot.Finance.Models
 
         protected Indicator(string symbol, KlineInterval interval, Enums.SubscriptionType subscriptionType, Action<string, Enums.SignalType> signalAction, Action<string, Dictionary<string, List<object>>> updateAction)
         {
-            if (!StaticBinance.Client.SpotApi.ExchangeData.GetExchangeInfoAsync().Result.Data.Symbols.Any(x => x.Name == symbol))
+            if (!Task.Run(() => StaticBinance.Client.SpotApi.ExchangeData.GetExchangeInfoAsync()).Result.Data.Symbols.Any(x => x.Name == symbol))
             {
                 throw new Exceptions.SymbolNotFoundException("Böyle bir sembol bulunamadı!");
             }

@@ -6,6 +6,11 @@ namespace EASYTelegramSignalBot.Database
 {
     public class DatabaseContext : DbContext
     {
+        public DatabaseContext()
+        {
+            CheckDatabaseSettings();
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(Settings.DatabaseSettings.DatabaseConnectionString);

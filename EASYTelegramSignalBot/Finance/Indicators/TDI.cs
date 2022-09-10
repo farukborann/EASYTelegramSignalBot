@@ -21,6 +21,7 @@ namespace EASYTelegramSignalBot.Finance.Indicators
         public List<double?>? DownVBResults { get; set; }
 
         private Enums.SignalType LastSignalType { get; set; }
+        private DateTime LastSignalTime { get; set; }
 
         public TDI(string symbol, KlineInterval interval, Action<string, Dictionary<string, List<object>>> updateAction, Action<string, Enums.SignalType> signalAction)
             : base(symbol, interval, Enums.SubscriptionType.Spot, signalAction, updateAction)
@@ -39,6 +40,7 @@ namespace EASYTelegramSignalBot.Finance.Indicators
 
         private void Indicate(List<Kline> data)
         {
+            if (LastSignalTime.AddSeconds(Settings.BotsSettings.TDISettings.MinSignalPeriot) > DateTime.Now) return;
             //Rsi 13 Periot
             List<RsiResult>? Rsi = data.GetRsi(Settings.BotsSettings.TDISettings.RSIPeriot).ToList();
 
@@ -104,6 +106,7 @@ namespace EASYTelegramSignalBot.Finance.Indicators
                 Task.Run(() => SignalAction(Symbol, RSI_PL));
                 Console.WriteLine($"TDI Signal !!! {Symbol} => {Enum.GetName(typeof(Enums.SignalType), RSI_PL)}");
                 LastSignalType = RSI_PL;
+                LastSignalTime = DateTime.Now;
             }
 
             Console.WriteLine($"{Symbol} RSI PL => {Enum.GetName(typeof(Enums.SignalType), RSI_PL)} || TSL => {Enum.GetName(typeof(Enums.SignalType), TSL)} || MBL => {Enum.GetName(typeof(Enums.SignalType), MBL)} || VB => {Enum.GetName(typeof(Enums.SignalType), VB)}");

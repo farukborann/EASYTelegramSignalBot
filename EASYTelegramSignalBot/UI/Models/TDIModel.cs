@@ -235,6 +235,13 @@ namespace EASYTelegramSignalBot.Models
             get => _RSIOverboughtLevel;
             set { _RSIOverboughtLevel = value; RaisePropertyChangedEvent(nameof(RSIOverboughtLevel)); }
         }
+
+        private int minSignalPeriot;
+        public int MinSignalPeriot
+        {
+            get => minSignalPeriot;
+            set { minSignalPeriot = value; RaisePropertyChangedEvent(nameof(MinSignalPeriot)); }
+        }
         #endregion
     }
 }

@@ -6,8 +6,6 @@
   },
 
   "TelegramSettings": {
-    "GeneralGroups": [ "-1001603147247" ],
-    "GeneralBot": "5190701377:AAHwyv2WCJOXoKyqApTSNWNnzf8AUO5fIZk",
     "TDIGroups": [ "-1001603147247" ],
     "TDIBot": "5190701377:AAHwyv2WCJOXoKyqApTSNWNnzf8AUO5fIZk",
     "RSIGroups": [ "-1001603147247" ],
@@ -18,9 +16,6 @@
 
   "BotsSettings": {
     "UpdateExpiredUsersTickMunite": 1.0,
-    "GeneralSettings": {
-
-    },
     "TDISettings": {
       "Symbols": [
         "BTCUSDT",
@@ -41,7 +36,8 @@
       "RSIPLPeriot": 2,
       "TSLPeriot": 7,
       "RSIOversoldLevel": 32,
-      "RSIOverboughtLevet": 68
+      "RSIOverboughtLevet": 68,
+      "MinSignalPeriot": 60
     },
     "RSISettings": {
       "Symbols": [
@@ -60,7 +56,8 @@
       },
       "RSIPeriot": 14,
       "RSIOversoldLevel": 30,
-      "RSIOverboughtLevet": 70
+      "RSIOverboughtLevet": 70,
+      "MinSignalPeriot":  60
     },
     "NewsSettings": {
       "Key": "18cc0162bdb2b0a18f0e57185da26f97a191d362",

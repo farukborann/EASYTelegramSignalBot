@@ -8,9 +8,6 @@
         xmlns:ViewModels="clr-namespace:EASYTelegramSignalBot.ViewModels"
         xmlns:Views="clr-namespace:EASYTelegramSignalBot.Views"
         Title="EASY Telegram Bot" Height="720" Width="1280">
-    <Controls:MetroWindow.DataContext>
-        <ViewModels:MainViewModel/>
-    </Controls:MetroWindow.DataContext>
     <Grid>
         <TabControl Controls:HeaderedControlHelper.HeaderFontSize="18">
             <TabItem Header="TDI" Padding="10">

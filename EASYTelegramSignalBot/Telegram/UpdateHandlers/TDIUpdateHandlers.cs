@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EASYTelegramSignalBot.Database;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,9 +8,9 @@ using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace EASYTelegramSignalBot.Telegram
+namespace EASYTelegramSignalBot.Telegram.UpdateHandlers
 {
-    public static class RSIUpdateHandlers
+    public static class TDIUpdateHandlers
     {
         //Main Methods
         public static Task PollingErrorHandler(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
@@ -60,25 +61,36 @@ namespace EASYTelegramSignalBot.Telegram
             {
                 text = "Lütfen önce kullanıcı adı belirleyin.\nhttps://telegram.org/faq#s-kullanici-adlari-nedir-nasil-alabilirim";
             }
-            else if (Database.Connection.Context.Users.Any(x => x.Username == message.Chat.Username))
+            else if (Connection.Context.Users.Any(x => x.Username == message.Chat.Username))
             {
-                Database.Models.User? user = Database.Connection.Context.Users.Where(x => x.Username == message.Chat.Username).First();
+                Database.Models.User? user = Connection.Context.Users.Where(x => x.Username == message.Chat.Username).First();
 
                 if (user.ChatId == 0)
                 {
                     user.ChatId = message.Chat.Id;
-                    Database.Connection.Context.SaveChanges();
+                    Connection.Context.SaveChanges();
                 }
+                user.UpdateUserSymbols();
+                user.TDISymbols.ToList().ForEach(x =>
+                {
+                    if (x.Value < DateTime.Now)
+                    {
+                        text += $"TDI Bot {x.Key} üyeliğiniz bitmiştir\n";
+                        user.TDISymbols.Remove(x.Key);
+                        Connection.Context.SaveChanges();
+                        return;
+                    }
 
-                text += "RSI Bot üyeliğiniz diğer paketlerdeki abonelikleriniz devam ettiği sürece hediye olarak devam edicektir.";
+                    text += $"TDI Bot {x.Key} üyeliğinizin bitiş tarihi {x.Value}\n";
+
+                });
             }
             else
             {
                 text = "Üyeliğiniz bulunamamıştır.\nLütfen bizimle iletişime geçin.";
             }
 
-            await botClient.SendTextMessageAsync(chatId: message.Chat.Id, parseMode: ParseMode.Markdown,
-                                                        text: text);
+            Task.Run(() => botClient.SendTextMessageAsync(chatId: message.Chat.Id, parseMode: ParseMode.Markdown, text: text));
         }
     }
 }

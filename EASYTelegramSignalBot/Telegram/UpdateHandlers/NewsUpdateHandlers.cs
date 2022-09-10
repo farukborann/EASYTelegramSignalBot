@@ -8,9 +8,9 @@ using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace EASYTelegramSignalBot.Telegram
+namespace EASYTelegramSignalBot.Telegram.UpdateHandlers
 {
-    public static class TDIUpdateHandlers
+    public static class NewsUpdateHandlers
     {
         //Main Methods
         public static Task PollingErrorHandler(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
@@ -70,28 +70,24 @@ namespace EASYTelegramSignalBot.Telegram
                     user.ChatId = message.Chat.Id;
                     Connection.Context.SaveChanges();
                 }
-                user.UpdateUserSymbols();
-                user.TDISymbols.ToList().ForEach(x =>
+
+                if (user.NewsExpiryDate < DateTime.Now)
                 {
-                    if (x.Value < DateTime.Now)
-                    {
-                        text += $"TDI Bot {x.Key} üyeliğiniz bitmiştir\n";
-                        user.TDISymbols.Remove(x.Key);
-                        Connection.Context.SaveChanges();
-                        return;
-                    }
+                    text += $"News Bot üyeliğiniz bitmiştir\n";
+                    user.News = false;
+                    Connection.Context.SaveChanges();
+                    return;
+                }
 
-                    text += $"TDI Bot {x.Key} üyeliğinizin bitiş tarihi {x.Value}\n";
+                text += $"News Bot üyeliğinizin bitiş tarihi {user.NewsExpiryDate}\n";
 
-                });
             }
             else
             {
                 text = "Üyeliğiniz bulunamamıştır.\nLütfen bizimle iletişime geçin.";
             }
 
-            await botClient.SendTextMessageAsync(chatId: message.Chat.Id, parseMode: ParseMode.Markdown,
-                                                        text: text);
+            Task.Run(() => botClient.SendTextMessageAsync(chatId: message.Chat.Id, parseMode: ParseMode.Markdown, text: text));
         }
     }
 }

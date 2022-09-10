@@ -18,8 +18,6 @@ namespace EASYTelegramSignalBot.SettingsManager.Models
 
     public class Telegramsettings
     {
-        public List<string> GeneralGroups { get; set; }
-        public string GeneralBot { get; set; }
         public List<string> TDIGroups { get; set; }
         public string TDIBot { get; set; }
         public List<string> RSIGroups { get; set; }
@@ -32,14 +30,9 @@ namespace EASYTelegramSignalBot.SettingsManager.Models
     public class Botssettings
     {
         public float UpdateExpiredUsersTickMunite { get; set; }
-        public Generalsettings GeneralSettings { get; set; }
         public Tdisettings TDISettings { get; set; }
         public Rsisettings RSISettings { get; set; }
         public Newssettings NewsSettings { get; set; }
-    }
-
-    public class Generalsettings
-    {
     }
 
     public class Newssettings
@@ -59,6 +52,7 @@ namespace EASYTelegramSignalBot.SettingsManager.Models
         public int TSLPeriot { get; set; }
         public int RSIOversoldLevel { get; set; }
         public int RSIOverboughtLevet { get; set; }
+        public int MinSignalPeriot { get; set; }
     }
 
     public class Rsisettings
@@ -68,6 +62,7 @@ namespace EASYTelegramSignalBot.SettingsManager.Models
         public int RSIPeriot { get; set; }
         public int RSIOversoldLevel { get; set; }
         public int RSIOverboughtLevet { get; set; }
+        public int MinSignalPeriot { get; set; }
     }
 
     public class Tdisignalmessages

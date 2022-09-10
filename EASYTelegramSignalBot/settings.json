@@ -37,7 +37,8 @@
       "TSLPeriot": 7,
       "RSIOversoldLevel": 32,
       "RSIOverboughtLevet": 68,
-      "MinSignalPeriot": 60
+      "MinSignalPeriot": 60,
+      "KlineInterval": "OneMinute"
     },
     "RSISettings": {
       "Symbols": [
@@ -57,7 +58,8 @@
       "RSIPeriot": 14,
       "RSIOversoldLevel": 30,
       "RSIOverboughtLevet": 70,
-      "MinSignalPeriot":  60
+      "MinSignalPeriot": 60,
+      "KlineInterval":  "OneMinute"
     },
     "NewsSettings": {
       "Key": "18cc0162bdb2b0a18f0e57185da26f97a191d362",

@@ -13,7 +13,6 @@ namespace EASYTelegramSignalBot.Finance.Indicators
     public class TDI : Models.Indicator
     {
         /* Indicator Values */
-
         public List<SmaResult>? FastMAResults { get; set; }
         public List<SmaResult>? SlowMAResults { get; set; }
         public List<double?>? UpVBResults { get; set; }
@@ -23,8 +22,8 @@ namespace EASYTelegramSignalBot.Finance.Indicators
         private Enums.SignalType LastSignalType { get; set; }
         private DateTime LastSignalTime { get; set; }
 
-        public TDI(string symbol, KlineInterval interval, Action<string, Dictionary<string, List<object>>> updateAction, Action<string, Enums.SignalType> signalAction)
-            : base(symbol, interval, Enums.SubscriptionType.Spot, signalAction, updateAction)
+        public TDI(string symbol, KlineInterval interval, Action<string, Dictionary<string, List<object>>> updateAction, Action<string, Enums.SignalType> signalAction, bool isPaused = false)
+            : base(symbol, interval, Enums.SubscriptionType.Spot, signalAction, updateAction, isPaused)
         {
             LastSignalType = Enums.SignalType.None;
 
@@ -36,10 +35,12 @@ namespace EASYTelegramSignalBot.Finance.Indicators
                 Action = Indicate
             };
             Subscribe();
+            this.isPaused = isPaused;
         }
 
         private void Indicate(List<Kline> data)
         {
+            if (isPaused) return;
             if (LastSignalTime.AddSeconds(Settings.BotsSettings.TDISettings.MinSignalPeriot) > DateTime.Now) return;
             //Rsi 13 Periot
             List<RsiResult>? Rsi = data.GetRsi(Settings.BotsSettings.TDISettings.RSIPeriot).ToList();

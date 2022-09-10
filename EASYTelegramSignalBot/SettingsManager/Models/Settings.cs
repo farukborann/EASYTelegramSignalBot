@@ -53,6 +53,7 @@ namespace EASYTelegramSignalBot.SettingsManager.Models
         public int RSIOversoldLevel { get; set; }
         public int RSIOverboughtLevet { get; set; }
         public int MinSignalPeriot { get; set; }
+        public string KlineInterval { get; set; }
     }
 
     public class Rsisettings
@@ -63,6 +64,7 @@ namespace EASYTelegramSignalBot.SettingsManager.Models
         public int RSIOversoldLevel { get; set; }
         public int RSIOverboughtLevet { get; set; }
         public int MinSignalPeriot { get; set; }
+        public string KlineInterval { get; set; }
     }
 
     public class Tdisignalmessages

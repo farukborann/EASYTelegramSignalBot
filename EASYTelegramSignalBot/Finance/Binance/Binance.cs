@@ -16,18 +16,28 @@ namespace EASYTelegramSignalBot.Finance
 
         public static KlineSubscription SubscribeToKlineUpdatesAsync(Enums.SubscriptionType subType, string symbol, KlineInterval interval, TickAction tickAction)
         {
-            try /*********** fix */
+            KlineSubscription? subscription;
+            if (SubscribedKlineUpdates.Any(x => x.Symbol.ToLower().Equals(symbol.ToLower()) && x.Interval.Equals(interval)))
             {
-                KlineSubscription? subscription = SubscribedKlineUpdates.First(x => x.Symbol.ToLower().Equals(symbol.ToLower()) && x.Interval.Equals(interval));
+                subscription = SubscribedKlineUpdates.First(x => x.Symbol.ToLower().Equals(symbol.ToLower()) && x.Interval.Equals(interval));
                 subscription.AddAction(tickAction);
                 return subscription;
             }
-            catch (InvalidOperationException)
+
+            subscription = new KlineSubscription(subType, symbol, interval, tickAction.KlineCount);
+            subscription.AddAction(tickAction);
+            SubscribedKlineUpdates.Add(subscription);
+            Console.WriteLine($"Kline Subscribed => {subType}, {symbol}, {interval}");
+            return subscription;
+        }
+
+        public static void DeleteAction(KlineSubscription subscription, TickAction action)
+        {
+            subscription.Actions.Remove(action);
+            if (subscription.Actions.Count == 0)
             {
-                KlineSubscription? subscription = new KlineSubscription(subType, symbol, interval, tickAction.KlineCount);
-                subscription.AddAction(tickAction);
-                SubscribedKlineUpdates.Add(subscription);
-                return subscription;
+                SubscribedKlineUpdates.Remove(subscription);
+                subscription.Dispose();
             }
         }
     }

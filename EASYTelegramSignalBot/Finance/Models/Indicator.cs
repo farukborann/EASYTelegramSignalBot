@@ -10,6 +10,7 @@ namespace EASYTelegramSignalBot.Finance.Models
     public abstract class Indicator : IDisposable
     {
         private bool isDisposed;
+        internal bool isPaused;
 
         public string Symbol { get; set; }
         public KlineInterval Interval { get; set; }
@@ -33,12 +34,12 @@ namespace EASYTelegramSignalBot.Finance.Models
 
             if (Subscription == null) return;
             TickAction? func = Subscription.Actions.First(x => x.Creator == this);
-            Subscription.Actions.Remove(func);
+            StaticBinance.DeleteAction(Subscription, func);
 
             isDisposed = true;
         }
 
-        protected Indicator(string symbol, KlineInterval interval, Enums.SubscriptionType subscriptionType, Action<string, Enums.SignalType> signalAction, Action<string, Dictionary<string, List<object>>> updateAction)
+        protected Indicator(string symbol, KlineInterval interval, Enums.SubscriptionType subscriptionType, Action<string, Enums.SignalType> signalAction, Action<string, Dictionary<string, List<object>>> updateAction, bool isPaused = false)
         {
             if (!Task.Run(() => StaticBinance.Client.SpotApi.ExchangeData.GetExchangeInfoAsync()).Result.Data.Symbols.Any(x => x.Name == symbol))
             {
@@ -50,6 +51,7 @@ namespace EASYTelegramSignalBot.Finance.Models
             Interval = interval;
             SignalAction = signalAction;
             UpdateAction = updateAction;
+            this.isPaused = isPaused;
         }
 
         public void Subscribe()
@@ -61,5 +63,26 @@ namespace EASYTelegramSignalBot.Finance.Models
                 Interval,
                 TickAction);
         }
+
+        public void ChangeInterval(KlineInterval klineInterval)
+        {
+            if (Subscription == null) return;
+            Interval = klineInterval;
+            TickAction? func = Subscription.Actions.First(x => x.Creator == this);
+            StaticBinance.DeleteAction(Subscription, func);
+
+            Subscribe();
+        }
+
+        public void Continue()
+        {
+            isPaused = false;
+        }
+
+        public void Pause()
+        {
+            isPaused = true;
+        }
+
     }
 }

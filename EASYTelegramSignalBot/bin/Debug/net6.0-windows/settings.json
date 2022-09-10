@@ -4,16 +4,20 @@
     "IsDatabaseEnsureCreated": true,
     "ResetDatabaseFirstStart": false
   },
-
   "TelegramSettings": {
-    "TDIGroups": [ "-1001603147247" ],
+    "TDIGroups": [
+      "-1001603147247"
+    ],
     "TDIBot": "5190701377:AAHwyv2WCJOXoKyqApTSNWNnzf8AUO5fIZk",
-    "RSIGroups": [ "-1001603147247" ],
+    "RSIGroups": [
+      "-1001603147247"
+    ],
     "RSIBot": "5761798395:AAEWuqcopafN5b5XhZmDHkBLRa7stzAMP04",
-    "NewsGroups": [ "-1001603147247" ],
+    "NewsGroups": [
+      "-1001603147247"
+    ],
     "NewsBot": "5712778575:AAF0o0DjH88_kfFUPpV6ScSz0B8W3x-sm3k"
   },
-
   "BotsSettings": {
     "UpdateExpiredUsersTickMunite": 1.0,
     "TDISettings": {
@@ -37,7 +41,8 @@
       "TSLPeriot": 7,
       "RSIOversoldLevel": 32,
       "RSIOverboughtLevet": 68,
-      "MinSignalPeriot": 60
+      "MinSignalPeriot": 60,
+      "KlineInterval": "ThreeMinutes"
     },
     "RSISettings": {
       "Symbols": [
@@ -55,9 +60,10 @@
         "BetweenLevels": "Rsı yola geldi => {Symbol}"
       },
       "RSIPeriot": 14,
-      "RSIOversoldLevel": 30,
-      "RSIOverboughtLevet": 70,
-      "MinSignalPeriot":  60
+      "RSIOversoldLevel": 27,
+      "RSIOverboughtLevet": 73,
+      "MinSignalPeriot": 300,
+      "KlineInterval": "OneMinute"
     },
     "NewsSettings": {
       "Key": "18cc0162bdb2b0a18f0e57185da26f97a191d362",

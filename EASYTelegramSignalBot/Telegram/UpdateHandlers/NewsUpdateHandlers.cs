@@ -27,13 +27,17 @@ namespace EASYTelegramSignalBot.Telegram.UpdateHandlers
 
         public static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
+            //Task? handler = BotOnMessageReceived(botClient, update.Message!);
+
             Task? handler = update.Type switch
             {
                 UpdateType.Message => BotOnMessageReceived(botClient, update.Message!),
+                _ => null
             };
 
             try
             {
+                if (handler == null) return;
                 await handler;
             }
             catch (Exception exception)

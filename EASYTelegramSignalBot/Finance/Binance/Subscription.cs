@@ -11,8 +11,10 @@ using System.Threading.Tasks;
 
 namespace EASYTelegramSignalBot.Finance.Binance
 {
-    public class KlineSubscription
+    public class KlineSubscription : IDisposable
     {
+        private bool isDisposed;
+
         private CancellationTokenSource CancellationTokenSource { get; set; }
         private Task<CallResult<UpdateSubscription>> CallResult { get; set; }
 
@@ -128,6 +130,22 @@ namespace EASYTelegramSignalBot.Finance.Binance
         public void Cancel()
         {
             CancellationTokenSource?.Cancel();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (isDisposed) return;
+
+            CancellationTokenSource.Cancel();
+            CallResult.Dispose();
+
+            isDisposed = true;
         }
     }
 }

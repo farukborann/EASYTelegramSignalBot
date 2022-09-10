@@ -1,4 +1,5 @@
-﻿using EASYTelegramSignalBot.Database;
+﻿using Binance.Net.Enums;
+using EASYTelegramSignalBot.Database;
 using EASYTelegramSignalBot.Database.Models;
 using EASYTelegramSignalBot.Finance.Models;
 using LiveCharts;
@@ -242,6 +243,15 @@ namespace EASYTelegramSignalBot.Models
             get => minSignalPeriot;
             set { minSignalPeriot = value; RaisePropertyChangedEvent(nameof(MinSignalPeriot)); }
         }
+
+        private KlineInterval? klineInterval;
+        public KlineInterval KlineInterval
+        {
+            get => klineInterval ??= (KlineInterval)Enum.Parse(typeof(KlineInterval), Settings.BotsSettings.TDISettings.KlineInterval);
+            set { klineInterval = value; RaisePropertyChangedEvent(nameof(KlineInterval)); }
+        }
+
+        public KlineInterval[] KlineIntervals => (KlineInterval[])Enum.GetValues(typeof(Binance.Net.Enums.KlineInterval));
         #endregion
     }
 }

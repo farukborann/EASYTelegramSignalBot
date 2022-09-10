@@ -1,4 +1,5 @@
-﻿using EASYTelegramSignalBot.Database;
+﻿using Binance.Net.Enums;
+using EASYTelegramSignalBot.Database;
 using EASYTelegramSignalBot.Database.Models;
 using EASYTelegramSignalBot.Finance;
 using EASYTelegramSignalBot.Finance.Binance;
@@ -50,11 +51,13 @@ namespace EASYTelegramSignalBot.ViewModels
             DelGroupCommand = new DelegateCommand((o) => DelGroup());
             SaveSettingsCommand = new DelegateCommand((o) => SaveSettings());
 
+            LoadSettings();
+
             foreach (string? symbol in Settings.BotsSettings.RSISettings.Symbols.ToList())
             {
                 try
                 {
-                    Model.Symbols.Add(new RSI(symbol, Binance.Net.Enums.KlineInterval.OneMinute, (string symbol, Dictionary<string, List<object>> values) => { }, SendSignalMessage) { });
+                    Model.Symbols.Add(new RSI(symbol, Model.KlineInterval, (string symbol, Dictionary<string, List<object>> values) => { }, SendSignalMessage, true) { });
                 }
                 catch (Exception ex)
                 {
@@ -67,9 +70,10 @@ namespace EASYTelegramSignalBot.ViewModels
                 }
             }
 
+            foreach (var symbol in Model.Symbols) symbol.Continue();
+
             Model.UISymbol = Model.Symbols.Count > 0 ? Model.Symbols[0].Symbol : "";
             Model.Symbols.First(x => x.Symbol == Model.UISymbol).UpdateAction = UpdateUI;
-            LoadSettings();
         }
 
         #region LiveCharts
@@ -335,6 +339,7 @@ namespace EASYTelegramSignalBot.ViewModels
             Settings.BotsSettings.RSISettings.RSIOverboughtLevet = Model.RSIOverboughtLevel;
 
             Settings.BotsSettings.RSISettings.MinSignalPeriot = Model.MinSignalPeriot;
+            Settings.BotsSettings.TDISettings.KlineInterval = Enum.GetName(typeof(KlineInterval), Model.KlineInterval);
 
             Settings.SaveSettings();
 
@@ -352,6 +357,20 @@ namespace EASYTelegramSignalBot.ViewModels
             Model.RSIOverboughtLevel = Settings.BotsSettings.RSISettings.RSIOverboughtLevet;
 
             Model.MinSignalPeriot = Settings.BotsSettings.RSISettings.MinSignalPeriot;
+        }
+
+        public void ChangeKlineInterval()
+        {
+            MessageBoxResult change = MessageBox.Show("Bu indikatöre ait tüm sembollerin candletick periyodu değişecektir.\nBu işlem sembol sayısına göre biraz zaman alabilir.\nDevam etmek istediğinizden emin misiniz ?", "Periyot değişikliği", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (change == MessageBoxResult.No)
+            {
+                Model.KlineInterval = Model.KlineIntervals.First(x => x.Equals(Model.Symbols.First().Interval));
+                return;
+            }
+
+            Model.Symbols.ToList().ForEach(x => x.ChangeInterval(Model.KlineInterval));
+
+            SaveSettings();
         }
         #endregion
     }

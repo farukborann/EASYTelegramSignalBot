@@ -6,11 +6,27 @@ namespace EASYTelegramSignalBot.Views
     /// <summary>
     /// TDI.xaml etkileşim mantığı
     /// </summary>
-    public partial class News : UserControl
+    public partial class RSI : UserControl
     {
-        public News()
+        bool isFirstLoad { get; set; }
+
+        public RSI()
         {
+            isFirstLoad = true;
             InitializeComponent();
+            isFirstLoad = false;
+        }
+
+        private void UserSymbolsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ((RSIViewModel)DataContext).UserSymbolsListSelectionChanged();
+        }
+
+        private void KlineInterval_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (isFirstLoad) return;
+            ((RSIViewModel)DataContext).ChangeKlineInterval();
         }
     }
 }
+

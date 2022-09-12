@@ -5,7 +5,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        xmlns:ViewModels="clr-namespace:EASYTelegramSignalBot.ViewModels"
         xmlns:Views="clr-namespace:EASYTelegramSignalBot.Views"
         Title="EASY Telegram Bot" Height="720" Width="1280">
     <Grid>
@@ -15,6 +14,9 @@
             </TabItem>
             <TabItem Header="RSI" Padding="10">
                 <Views:RSI x:Name="RSIView"/>
+            </TabItem>
+            <TabItem Header="PAC" Padding="10">
+                <Views:PAC x:Name="PACView" />
             </TabItem>
             <TabItem Header="Haberler" Padding="10">
                 <Views:News x:Name="NewsView" />

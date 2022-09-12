@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Windows.Threading;
 
 namespace EASYTelegramSignalBot.Database
@@ -8,17 +7,17 @@ namespace EASYTelegramSignalBot.Database
     {
         private static DispatcherTimer refreshContextTimer { get; set; }
 
-        public static DatabaseContext Context { get; set; }
+        public static Context Context { get; set; }
 
         private static void Refresh(object sender, EventArgs e)
         {
-            Context = new DatabaseContext();
-            Context.Users.Load();
+            Context = new Context();
+            //var _ = Context.Users;
         }
         static Connection()
         {
             Context = new();
-            Context.Users.Load();
+            //var _ = Context.Users;
 
             refreshContextTimer = new DispatcherTimer
             {

@@ -64,7 +64,7 @@ namespace EASYTelegramSignalBot.Finance.Indicators
 
             //Call signal action
             if (RSI.Equals(LastSignalType)) return;
-            if(LastSignalType == Enums.SignalType.None)
+            if (LastSignalType == Enums.SignalType.None)
             {
                 LastSignalType = RSI;
                 return;

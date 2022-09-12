@@ -1,12 +1,14 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Windows.Threading;
-using EASYTelegramSignalBot.Database.Models;
+﻿using EASYTelegramSignalBot.Database.Models;
 using EASYTelegramSignalBot.NewsBot.Helpers;
 using EASYTelegramSignalBot.NewsBot.Models;
 using EASYTelegramSignalBot.Telegram;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Windows.Threading;
 using Telegram.Bot;
+using TeleApi = Telegram.Bot;
 
 namespace EASYTelegramSignalBot.NewsBot
 {
@@ -14,7 +16,7 @@ namespace EASYTelegramSignalBot.NewsBot
     {
         private string ApiUrl { get; set; }
         private DispatcherTimer Timer { get; set; }
-        private int? LastNewsId { get; set; }
+        private int? LastReportId { get; set; }
 
         private bool IsUpdating { get; set; }
         public CryptopanicNewsBot()
@@ -23,7 +25,7 @@ namespace EASYTelegramSignalBot.NewsBot
             ApiUrl = $"https://cryptopanic.com/api/v1/posts/?auth_token={Settings.BotsSettings.NewsSettings.Key}";
 
             Timer = new();
-            Timer.Tick += (object? sender, EventArgs e) => 
+            Timer.Tick += (object? sender, EventArgs e) =>
             {
                 if (IsUpdating) return;
                 IsUpdating = true;
@@ -38,22 +40,39 @@ namespace EASYTelegramSignalBot.NewsBot
         private async Task UpdateNews()
         {
             Console.WriteLine("Cryptopanic News Bot Haberler Güncelleniyor");
-            Response? newNews = Task.Run(() => GetNews()).Result;
+            Response? apiResponse = Task.Run(() => GetNews()).Result;
+            if (apiResponse == null)
+            {
+                Console.WriteLine("Cryptopanic News Bot Yeni Haberler Kontrol Edilemedi.\nLütfen Api'ın Çalıştığından, Key'in Doğru Olduğundan Ve İnternet Bağlantınız Olduğundan Emin Olun.");
+                return;
+            }
 
-            if (LastNewsId == null) LastNewsId = newNews?.results[0].id;
-            if (newNews == null || newNews.results[0].id == LastNewsId) 
+            List<Result>? News = apiResponse.results;
+
+            if (LastReportId == null) LastReportId = News[0].id;
+            if (News == null) // || newNews.results[0].id == LastNewsId
             {
                 Console.WriteLine("Cryptopanic News Bot Yeni Haber Yok");
             }
             else
             {
-                var translatedTitle = Task.Run(() => Translate.TranslateText("en", "tr", newNews.results[0].title)).Result;
+                foreach (Result? report in News)
+                {
+                    if (report.id == LastReportId) break;
+                    string? translatedTitle = Task.Run(() => Translate.TranslateText("en", "tr", report.title)).Result;
+                    if (string.IsNullOrEmpty(translatedTitle)) continue;
 
-                if (string.IsNullOrEmpty(translatedTitle)) return;
-                string message = Settings.BotsSettings.NewsSettings.Message.Replace("{Title}", translatedTitle).Replace("{Link}", newNews.results[0].url).Replace("{Coins}", string.Join(", ", newNews.results[0].currencies ?? new()));
+                    string currencies = string.Empty;
+                    if (report.currencies != null) report.currencies.ForEach(x => currencies += x.title + $"({x.code})\n");
 
-                Task.Run(() => SendMessages(message));
-                LastNewsId = newNews?.results[0].id;
+                    string message = Settings.BotsSettings.NewsSettings.Message.
+                        Replace("{Title}", translatedTitle).
+                        Replace("{Link}", $"[{report.source.title}](https://{report.source.domain}/)").
+                        Replace("{Coins}", currencies);
+
+                    Task.Run(() => SendMessages(message));
+                }
+                LastReportId = News[0].id;
             }
 
             Console.WriteLine("Cryptopanic News Bot Haberler Güncellendi");
@@ -66,7 +85,7 @@ namespace EASYTelegramSignalBot.NewsBot
                 try
                 {
                     if (user.ChatId == 0 || !user.News) continue;
-                    BotClients.NewsClient.SendTextMessageAsync(user.ChatId, message);
+                    BotClients.NewsClient.SendTextMessageAsync(user.ChatId, message, parseMode: TeleApi.Types.Enums.ParseMode.Markdown);
                 }
                 catch (Exception ex)
                 {
@@ -79,7 +98,7 @@ namespace EASYTelegramSignalBot.NewsBot
             {
                 try
                 {
-                    BotClients.NewsClient.SendTextMessageAsync(group, message);
+                    BotClients.NewsClient.SendTextMessageAsync(group, message, parseMode: TeleApi.Types.Enums.ParseMode.Markdown);
                 }
                 catch (Exception ex)
                 {

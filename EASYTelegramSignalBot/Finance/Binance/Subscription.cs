@@ -93,6 +93,7 @@ namespace EASYTelegramSignalBot.Finance.Binance
         {
             if (Limit < limit)
             {
+                Limit = limit;
                 GetKlines();
             }
         }
@@ -111,10 +112,11 @@ namespace EASYTelegramSignalBot.Finance.Binance
         {
             if (Limit < 1500)
             {
-                GetKlinesAsync(Symbol, Interval, Limit).ForEach(x => Klines.Add(x));
+                Klines = GetKlinesAsync(Symbol, Interval, Limit);
                 return;
             }
-            GetKlinesAsync(Symbol, Interval, 1500).ForEach(x => Klines.Add(x));
+
+            Klines = GetKlinesAsync(Symbol, Interval, 1500);
             int GetKlinesCount = Limit - 1500;
             for (; GetKlinesCount > 1500; GetKlinesCount -= 1500)
             {

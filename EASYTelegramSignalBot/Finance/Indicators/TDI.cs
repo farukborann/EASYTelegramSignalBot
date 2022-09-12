@@ -99,11 +99,10 @@ namespace EASYTelegramSignalBot.Finance.Indicators
             if (Last_FastMA > Last_Up) VB = Enums.SignalType.Exit;
             else VB = Last_FastMA < Last_Up ? Enums.SignalType.Buy : Enums.SignalType.Sell;
 
+            if (RSI_PL.Equals(LastSignalType)) return;
             if (RSI_PL.EqualsAll(TSL, MBL, VB))
             {
                 //Call signal action
-                if (RSI_PL.Equals(LastSignalType)) return;
-
                 Task.Run(() => SignalAction(Symbol, RSI_PL));
                 Console.WriteLine($"TDI Signal !!! {Symbol} => {Enum.GetName(typeof(Enums.SignalType), RSI_PL)}");
                 LastSignalType = RSI_PL;

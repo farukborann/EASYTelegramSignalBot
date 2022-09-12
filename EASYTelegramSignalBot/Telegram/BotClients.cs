@@ -11,21 +11,22 @@ namespace EASYTelegramSignalBot.Telegram
     {
         private static CancellationTokenSource CancelToken { get; set; }
         public static TelegramBotClient TDIClient { get; set; }
+        public static TelegramBotClient PACClient { get; set; }
         public static TelegramBotClient RSIClient { get; set; }
         public static TelegramBotClient NewsClient { get; set; }
 
         public static void StartBotClients()
         {
-            Console.WriteLine("Telegram Botları Başlatılıyor");
             try
             {
                 TDIClient = new(Settings.TelegramSettings.TDIBot);
+                PACClient = new(Settings.TelegramSettings.PACBot);
                 RSIClient = new(Settings.TelegramSettings.RSIBot);
                 NewsClient = new(Settings.TelegramSettings.NewsBot);
                 CancelToken = new CancellationTokenSource();
 
                 StartReceiving();
-                Console.WriteLine("Telegram Botları Başlatıldı");
+                Console.WriteLine("Telegram Botları Başladı");
             }
             catch (Exception ex)
             {
@@ -41,18 +42,27 @@ namespace EASYTelegramSignalBot.Telegram
                 ThrowPendingUpdates = true
             };
 
-            TDIClient.StartReceiving(updateHandler: TDIUpdateHandlers.HandleUpdateAsync,
-                               pollingErrorHandler: TDIUpdateHandlers.PollingErrorHandler,
+            TDI TDIHandler = new(TDIClient);
+            TDIClient.StartReceiving(updateHandler: TDIHandler.HandleUpdateAsync,
+                               pollingErrorHandler: TDIHandler.PollingErrorHandler,
                                receiverOptions: receiverOptions,
                                cancellationToken: CancelToken.Token);
 
-            RSIClient.StartReceiving(updateHandler: RSIUpdateHandlers.HandleUpdateAsync,
-                   pollingErrorHandler: RSIUpdateHandlers.PollingErrorHandler,
+            PAC PACHandler = new(PACClient);
+            PACClient.StartReceiving(updateHandler: PACHandler.HandleUpdateAsync,
+                   pollingErrorHandler: PACHandler.PollingErrorHandler,
                    receiverOptions: receiverOptions,
                    cancellationToken: CancelToken.Token);
 
-            NewsClient.StartReceiving(updateHandler: NewsUpdateHandlers.HandleUpdateAsync,
-                   pollingErrorHandler: NewsUpdateHandlers.PollingErrorHandler,
+            RSI RSIHandler = new(RSIClient);
+            RSIClient.StartReceiving(updateHandler: RSIHandler.HandleUpdateAsync,
+                   pollingErrorHandler: RSIHandler.PollingErrorHandler,
+                   receiverOptions: receiverOptions,
+                   cancellationToken: CancelToken.Token);
+
+            News NewsHandler = new(NewsClient);
+            NewsClient.StartReceiving(updateHandler: NewsHandler.HandleUpdateAsync,
+                   pollingErrorHandler: NewsHandler.PollingErrorHandler,
                    receiverOptions: receiverOptions,
                    cancellationToken: CancelToken.Token);
         }

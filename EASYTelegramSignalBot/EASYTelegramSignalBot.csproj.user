@@ -21,6 +21,9 @@
     <Page Update="UI\Views\RSI.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="UI\Views\PAC.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="UI\Views\TDI.xaml">
       <SubType>Designer</SubType>
     </Page>

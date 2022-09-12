@@ -48,10 +48,6 @@
               "target": "Package",
               "version": "[8.1.9, )"
             },
-            "LiveCharts.Wpf": {
-              "target": "Package",
-              "version": "[0.9.7, )"
-            },
             "LiveCharts.Wpf.Core": {
               "target": "Package",
               "version": "[0.9.8, )"
@@ -72,17 +68,9 @@
               "target": "Package",
               "version": "[2.2.1, )"
             },
-            "System.Data.SqlClient": {
-              "target": "Package",
-              "version": "[4.8.3, )"
-            },
             "Telegram.Bot": {
               "target": "Package",
               "version": "[18.0.0, )"
-            },
-            "Telegram.Bot.CommandHandler": {
-              "target": "Package",
-              "version": "[1.5.0, )"
             }
           },
           "imports": [

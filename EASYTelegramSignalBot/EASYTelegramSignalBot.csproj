@@ -10,15 +10,12 @@
 
   <ItemGroup>
     <PackageReference Include="Binance.Net" Version="8.1.9" />
-    <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
     <PackageReference Include="LiveCharts.Wpf.Core" Version="0.9.8" />
     <PackageReference Include="MahApps.Metro" Version="2.4.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.8" />
     <PackageReference Include="Skender.Stock.Indicators" Version="2.2.1" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
     <PackageReference Include="Telegram.Bot" Version="18.0.0" />
-    <PackageReference Include="Telegram.Bot.CommandHandler" Version="1.5.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +23,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="UI\Views\RSI.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UI\Views\PAC.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -42,6 +42,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UI\Views\RSI.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UI\Views\PAC.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

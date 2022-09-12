@@ -8,16 +8,16 @@ namespace EASYTelegramSignalBot.NewsBot.Helpers
     {
         public static async Task<string> Post(string url, string data)
         {
-            using var client = new HttpClient();
-            var postData = new StringContent(data, Encoding.UTF8, "application/json");
-            var response = await client.PostAsync(url, postData);
-            var result = await response.Content.ReadAsStringAsync();
+            using HttpClient? client = new HttpClient();
+            StringContent? postData = new StringContent(data, Encoding.UTF8, "application/json");
+            HttpResponseMessage? response = await client.PostAsync(url, postData);
+            string? result = await response.Content.ReadAsStringAsync();
             return result;
         }
         public static async Task<string> Get(string url)
         {
-            using var client = new HttpClient();
-            var content = Task.Run(() => client.GetStringAsync(url)).Result;
+            using HttpClient? client = new HttpClient();
+            string? content = Task.Run(() => client.GetStringAsync(url)).Result;
             return content;
         }
     }

@@ -20,6 +20,8 @@ namespace EASYTelegramSignalBot.SettingsManager.Models
     {
         public List<string> TDIGroups { get; set; }
         public string TDIBot { get; set; }
+        public List<string> PACGroups { get; set; }
+        public string PACBot { get; set; }
         public List<string> RSIGroups { get; set; }
         public string RSIBot { get; set; }
         public List<string> NewsGroups { get; set; }
@@ -31,6 +33,7 @@ namespace EASYTelegramSignalBot.SettingsManager.Models
     {
         public float UpdateExpiredUsersTickMunite { get; set; }
         public Tdisettings TDISettings { get; set; }
+        public Pacsettings PACSettings { get; set; }
         public Rsisettings RSISettings { get; set; }
         public Newssettings NewsSettings { get; set; }
     }
@@ -56,6 +59,15 @@ namespace EASYTelegramSignalBot.SettingsManager.Models
         public string KlineInterval { get; set; }
     }
 
+    public class Pacsettings
+    {
+        public List<string> Symbols { get; set; }
+        public Pacsignalmessages SignalMessages { get; set; }
+        public int SMMAPeriot { get; set; }
+        public int MinSignalPeriot { get; set; }
+        public string KlineInterval { get; set; }
+    }
+
     public class Rsisettings
     {
         public List<string> Symbols { get; set; }
@@ -71,6 +83,13 @@ namespace EASYTelegramSignalBot.SettingsManager.Models
     {
         public string Buy { get; set; }
         public string Sell { get; set; }
+        public string Exit { get; set; }
+    }
+
+    public class Pacsignalmessages
+    {
+        public string Long { get; set; }
+        public string Short { get; set; }
         public string Exit { get; set; }
     }
 

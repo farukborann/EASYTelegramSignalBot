@@ -8,7 +8,7 @@ namespace EASYTelegramSignalBot.Views
     /// </summary>
     public partial class RSI : UserControl
     {
-        bool isFirstLoad { get; set; }
+        private bool isFirstLoad { get; set; }
 
         public RSI()
         {

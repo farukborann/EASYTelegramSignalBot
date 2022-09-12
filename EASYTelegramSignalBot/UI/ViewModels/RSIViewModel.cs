@@ -7,6 +7,7 @@ using EASYTelegramSignalBot.Finance.Indicators;
 using EASYTelegramSignalBot.Finance.Models;
 using EASYTelegramSignalBot.Models;
 using EASYTelegramSignalBot.Telegram;
+using EASYTelegramSignalBot.UI.Helpers;
 using LiveCharts;
 using LiveCharts.Defaults;
 using System;
@@ -17,7 +18,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Telegram.Bot;
-using WpfClient.MVVM;
 
 namespace EASYTelegramSignalBot.ViewModels
 {
@@ -70,10 +70,7 @@ namespace EASYTelegramSignalBot.ViewModels
                 }
             }
 
-            foreach (var symbol in Model.Symbols) symbol.Continue();
-
-            Model.UISymbol = Model.Symbols.Count > 0 ? Model.Symbols[0].Symbol : "";
-            Model.Symbols.First(x => x.Symbol == Model.UISymbol).UpdateAction = UpdateUI;
+            foreach (Indicator? symbol in Model.Symbols) symbol.Continue();
         }
 
         #region LiveCharts
@@ -168,8 +165,10 @@ namespace EASYTelegramSignalBot.ViewModels
             {
                 if (!Connection.Context.Users.Any(x => x.Username == Model.AddUserString))
                 {
-                    Connection.Context.Add(new User() { Username = Model.AddUserString ?? "", TDI = false, TDISymbolValues = "{}", News = false });
+                    User? user = new User(Model.AddUserString ?? "") { };
+                    Connection.Context.Add(user);
                     Connection.Context.SaveChanges();
+                    Model.SelectedUser = user;
                     MessageBox.Show("Kullanıcı başarıyla eklendi.", "Kullanıcı Eklendi", MessageBoxButton.OK);
                 }
                 else
@@ -189,7 +188,7 @@ namespace EASYTelegramSignalBot.ViewModels
             try
             {
                 if (Model.SelectedUser == null) return;
-                Connection.Context.DelUser(Model.SelectedUser);
+                Connection.Context.DeleteUser(Model.SelectedUser);
                 Connection.Context.SaveChanges();
 
                 MessageBox.Show("Kullanıcı başarıyla silindi.", "Kullanıcı Silindi", MessageBoxButton.OK);

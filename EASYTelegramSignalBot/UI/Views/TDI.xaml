@@ -192,6 +192,24 @@
                             <GridView.Columns>
                                 <GridViewColumn Width="130" Header="Kullanıcı Adı"
                                 DisplayMemberBinding="{Binding Username}"/>
+                                <GridViewColumn Width="130" Header="Üyelik">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock>
+                                                <TextBlock.Style>
+                                                    <Style TargetType="{x:Type TextBlock}">
+                                                        <Setter Property="Text" Value="Yok" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding TDI}" Value="True">
+                                                                <Setter Property="Text" Value="Var" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
                             </GridView.Columns>
                         </GridView>
                     </ListView.View>

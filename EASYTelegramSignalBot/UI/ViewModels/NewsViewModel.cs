@@ -1,12 +1,12 @@
 ﻿using EASYTelegramSignalBot.Database;
 using EASYTelegramSignalBot.Database.Models;
 using EASYTelegramSignalBot.Models;
+using EASYTelegramSignalBot.UI.Helpers;
 using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using WpfClient.MVVM;
 
 namespace EASYTelegramSignalBot.ViewModels
 {
@@ -41,16 +41,16 @@ namespace EASYTelegramSignalBot.ViewModels
             {
                 if (!Connection.Context.Users.Any(x => x.Username == Model.AddUserString))
                 {
-                    Connection.Context.Add(new User() { Username = Model.AddUserString ?? "", TDI = false, TDISymbolValues = "{}", News = true, NewsExpiryDate = DateTime.Now.AddDays(Model.AddUserDays) });
+                    Connection.Context.Add(new User(Model.AddUserString ?? "") { NewsExpiryDate = DateTime.Now.AddDays(Model.AddUserDays) });
                     Connection.Context.SaveChanges();
                     MessageBox.Show("Kullanıcı başarıyla eklendi.", "Kullanıcı Eklendi", MessageBoxButton.OK);
                 }
                 else if (Connection.Context.Users.Any(x => x.Username == Model.AddUserString && x.News == false))
                 {
-                    var user = Connection.Context.Users.First(x => x.Username == Model.AddUserString);
+                    User? user = Connection.Context.Users.First(x => x.Username == Model.AddUserString);
                     user.News = true;
                     DateTime newExpiryDate = DateTime.Now.AddDays(Model.AddUserDays);
-                    if(user.NewsExpiryDate > DateTime.Now) newExpiryDate = user.NewsExpiryDate.Value.AddDays(Model.AddUserDays);
+                    if (user.NewsExpiryDate > DateTime.Now) newExpiryDate = user.NewsExpiryDate.Value.AddDays(Model.AddUserDays);
                     user.NewsExpiryDate = newExpiryDate;
                     Connection.Context.SaveChanges();
                     MessageBox.Show("Kullanıcı başarıyla eklendi.", "Kullanıcı Eklendi", MessageBoxButton.OK);
@@ -74,7 +74,7 @@ namespace EASYTelegramSignalBot.ViewModels
             try
             {
                 if (Model.SelectedUser == null) return;
-                var user = Connection.Context.Users.First(x => x.Username == Model.AddUserString && x.News == true);
+                User? user = Connection.Context.Users.First(x => x.Username == Model.AddUserString && x.News == true);
                 user.News = false;
                 user.NewsExpiryDate = DateTime.Now.AddDays(-1);
                 Connection.Context.SaveChanges();

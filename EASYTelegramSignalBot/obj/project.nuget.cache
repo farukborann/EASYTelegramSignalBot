@@ -1,15 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "c1jJoSMdD8Mjge+Eki4MOY+5IjgehUPEXaKqwflaRWNWZ4mmkd0fXy+Z4UnRX1jCwIrC9ctbhx4Rb8jR4W9WgA==",
+  "dgSpecHash": "pYciYmuBt1XFjGLK3E2ULO/TstrOryIxUyLNbg8eT8wpwvMY39BiP2NsA0ebh6w0yi7dnH5Ed3AKvgEyERSisA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Ömer Faruk BORAN\\Desktop\\Workspace\\EASYTelegramSignalBot\\EASYTelegramSignalBot\\EASYTelegramSignalBot.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\binance.net\\8.1.9\\binance.net.8.1.9.nupkg.sha512",
     "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\controlzex\\4.4.0\\controlzex.4.4.0.nupkg.sha512",
     "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\cryptoexchange.net\\5.2.2\\cryptoexchange.net.5.2.2.nupkg.sha512",
-    "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\livecharts\\0.9.7\\livecharts.0.9.7.nupkg.sha512",
     "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\livecharts.core\\0.9.8\\livecharts.core.0.9.8.nupkg.sha512",
-    "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\livecharts.wpf\\0.9.7\\livecharts.wpf.0.9.7.nupkg.sha512",
     "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\livecharts.wpf.core\\0.9.8\\livecharts.wpf.core.0.9.8.nupkg.sha512",
     "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\mahapps.metro\\2.4.9\\mahapps.metro.2.4.9.nupkg.sha512",
     "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
@@ -40,14 +38,9 @@
     "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
     "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\microsoft.xaml.behaviors.wpf\\1.1.19\\microsoft.xaml.behaviors.wpf.1.1.19.nupkg.sha512",
     "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
-    "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\runtime.native.system.data.sqlclient.sni\\4.7.0\\runtime.native.system.data.sqlclient.sni.4.7.0.nupkg.sha512",
-    "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\runtime.win-arm64.runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.win-arm64.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
-    "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\runtime.win-x64.runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.win-x64.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
-    "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\runtime.win-x86.runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.win-x86.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
     "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\skender.stock.indicators\\2.2.1\\skender.stock.indicators.2.2.1.nupkg.sha512",
     "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\system.collections.immutable\\6.0.0\\system.collections.immutable.6.0.0.nupkg.sha512",
     "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\system.configuration.configurationmanager\\4.7.0\\system.configuration.configurationmanager.4.7.0.nupkg.sha512",
-    "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\system.data.sqlclient\\4.8.3\\system.data.sqlclient.4.8.3.nupkg.sha512",
     "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\system.diagnostics.diagnosticsource\\6.0.0\\system.diagnostics.diagnosticsource.6.0.0.nupkg.sha512",
     "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\system.drawing.common\\4.7.0\\system.drawing.common.4.7.0.nupkg.sha512",
     "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\system.identitymodel.tokens.jwt\\6.8.0\\system.identitymodel.tokens.jwt.6.8.0.nupkg.sha512",
@@ -61,29 +54,7 @@
     "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\system.text.encoding.codepages\\4.7.0\\system.text.encoding.codepages.4.7.0.nupkg.sha512",
     "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\system.text.json\\4.7.2\\system.text.json.4.7.2.nupkg.sha512",
     "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\system.windows.extensions\\4.7.0\\system.windows.extensions.4.7.0.nupkg.sha512",
-    "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\telegram.bot\\18.0.0\\telegram.bot.18.0.0.nupkg.sha512",
-    "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\telegram.bot.commandhandler\\1.5.0\\telegram.bot.commandhandler.1.5.0.nupkg.sha512"
+    "C:\\Users\\Ömer Faruk BORAN\\.nuget\\packages\\telegram.bot\\18.0.0\\telegram.bot.18.0.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "'LiveCharts 0.9.7' paketi, proje hedef çerçevesi 'net6.0-windows7.0' yerine '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' kullanılarak geri yüklendi. Bu paket projenizle tamamen uyumlu olmayabilir.",
-      "libraryId": "LiveCharts",
-      "targetGraphs": [
-        "net6.0-windows7.0"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "'LiveCharts.Wpf 0.9.7' paketi, proje hedef çerçevesi 'net6.0-windows7.0' yerine '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' kullanılarak geri yüklendi. Bu paket projenizle tamamen uyumlu olmayabilir.",
-      "libraryId": "LiveCharts.Wpf",
-      "targetGraphs": [
-        "net6.0-windows7.0"
-      ]
-    }
-  ]
+  "logs": []
 }

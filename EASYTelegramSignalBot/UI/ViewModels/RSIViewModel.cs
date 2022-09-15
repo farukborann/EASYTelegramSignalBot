@@ -53,6 +53,11 @@ namespace EASYTelegramSignalBot.ViewModels
 
             LoadSettings();
 
+            SetSubscriptions();
+        }
+
+        private void SetSubscriptions()
+        {
             foreach (string? symbol in Settings.BotsSettings.RSISettings.Symbols.ToList())
             {
                 try
@@ -69,8 +74,13 @@ namespace EASYTelegramSignalBot.ViewModels
                     }
                 }
             }
+            UILoader.Instance.SetPageReady("RSI", () => Continue());
+        }
 
+        private Task Continue()
+        {
             foreach (Indicator? symbol in Model.Symbols) symbol.Continue();
+            return Task.CompletedTask;
         }
 
         #region LiveCharts
@@ -166,8 +176,7 @@ namespace EASYTelegramSignalBot.ViewModels
                 if (!Connection.Context.Users.Any(x => x.Username == Model.AddUserString))
                 {
                     User? user = new User(Model.AddUserString ?? "") { };
-                    Connection.Context.Add(user);
-                    Connection.Context.SaveChanges();
+                    Connection.Context.CreateUser(user);
                     Model.SelectedUser = user;
                     MessageBox.Show("Kullanıcı başarıyla eklendi.", "Kullanıcı Eklendi", MessageBoxButton.OK);
                 }
@@ -256,27 +265,33 @@ namespace EASYTelegramSignalBot.ViewModels
             }
         }
 
-        private void _AddSymbol(string symbol)
+        private void _AddSymbol(string symbol, bool isPaused = false)
         {
-            Model.Symbols.Add(new RSI(symbol, Binance.Net.Enums.KlineInterval.OneMinute, (string symbol, Dictionary<string, List<object>> values) => { }, SendSignalMessage) { });
+            Model.Symbols.Add(new RSI(symbol, Model.KlineInterval, (string symbol, Dictionary<string, List<object>> values) => { }, SendSignalMessage, isPaused: isPaused) { });
             Settings.BotsSettings.RSISettings.Symbols.Add(symbol);
             Settings.SaveSettings();
         }
 
         public Task AddAllSymbols()
         {
-            CryptoExchange.Net.Objects.WebCallResult<Binance.Net.Objects.Models.Spot.BinanceExchangeInfo>? exchangeInfos = StaticBinance.Client.SpotApi.ExchangeData.GetExchangeInfoAsync().Result;
+            Model.Symbols.ToList().ForEach(x => x.Dispose());
             Model.Symbols.Clear();
             Settings.BotsSettings.RSISettings.Symbols.Clear();
-            exchangeInfos.Data.Symbols.ToList().ForEach(x =>
+            StaticBinance.ExchangeInfos.Spot.ToList().ForEach(x =>
             {
                 try
                 {
-                    _AddSymbol(x.Name);
+                    if (!x.Name.EndsWith("USDT")) return;
+                    _AddSymbol(x.Name, true);
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show($"{x.Name} eklenirken bir hata meydana geldi : {ex.Message}", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
+                foreach(var symbol in Model.Symbols)
+                {
+                    symbol.Continue();
                 }
             });
 
@@ -285,7 +300,7 @@ namespace EASYTelegramSignalBot.ViewModels
         #endregion 
 
         #region Telegram Messages
-        public void SendSignalMessage(string symbol, Enums.SignalType type)
+        public void SendSignalMessage(string symbol, Dictionary<string, List<object>> values, Enums.SignalType type)
         {
             string message = type switch
             {
@@ -296,33 +311,9 @@ namespace EASYTelegramSignalBot.ViewModels
             };
 
             if (string.IsNullOrEmpty(message)) return;
-            message = message.Replace("{Symbol}", symbol);
+            message = message.Replace("{Symbol}", symbol).Replace("{Price}", Math.Round(((Kline)values["Klines"].Last()).Close, 2).ToString()).Replace("{RSI}", Math.Round((double)values["RSI"].Last(), 2).ToString());
 
-            foreach (User user in Model.Users)
-            {
-                try
-                {
-                    if (user.ChatId == 0) continue;
-                    BotClients.RSIClient.SendTextMessageAsync(user.ChatId, message);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Telegram Kişiye ({user.Username}) Mesaj Gönderirken Hata : {ex.Message}");
-                }
-
-            }
-
-            foreach (string? group in Settings.TelegramSettings.RSIGroups)
-            {
-                try
-                {
-                    BotClients.RSIClient.SendTextMessageAsync(group, message);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Telegram Gruba ({group}) Mesaj Gönderirken Hata : {ex.Message}");
-                }
-            }
+            Telegram.Bots.RSI.SendMessages(message);
         }
         #endregion
 

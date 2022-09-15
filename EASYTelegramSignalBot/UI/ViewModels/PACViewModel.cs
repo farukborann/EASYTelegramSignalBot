@@ -55,6 +55,11 @@ namespace EASYTelegramSignalBot.ViewModels
 
             LoadSettings();
 
+            SetSubscriptions();
+        }
+
+        private void SetSubscriptions()
+        {
             foreach (string? symbol in Settings.BotsSettings.PACSettings.Symbols.ToList())
             {
                 try
@@ -71,8 +76,13 @@ namespace EASYTelegramSignalBot.ViewModels
                     }
                 }
             }
+            UILoader.Instance.SetPageReady("PAC", () => Continue());
+        }
 
+        private Task Continue()
+        {
             foreach (Indicator? symbol in Model.Symbols) symbol.Continue();
+            return Task.CompletedTask;
         }
 
         #region LiveCharts
@@ -169,9 +179,8 @@ namespace EASYTelegramSignalBot.ViewModels
             {
                 if (!Connection.Context.Users.Any(x => x.Username == Model.AddUserString))
                 {
-                    User? user = new User(Model.AddUserString ?? "") { PAC = true };
-                    Connection.Context.Add(user);
-                    Connection.Context.SaveChanges();
+                    User? user = new User(Model.AddUserString) { PAC = true };
+                    Connection.Context.CreateUser(user);
                     Model.SelectedUser = user;
                     MessageBox.Show("Kullanıcı başarıyla eklendi.", "Kullanıcı Eklendi", MessageBoxButton.OK);
                 }
@@ -200,7 +209,7 @@ namespace EASYTelegramSignalBot.ViewModels
             try
             {
                 if (Model.SelectedUser == null) return;
-                User? user = Connection.Context.Users.First(x => x.Username == Model.AddUserString && x.PAC == true);
+                User? user = Connection.Context.Users.First(x => x.Username == Model.SelectedUser.Username);
                 user.PAC = false;
                 Connection.Context.SaveChanges();
                 Model.SelectedUser = user;
@@ -354,7 +363,7 @@ namespace EASYTelegramSignalBot.ViewModels
         #endregion 
 
         #region Telegram Messages
-        public void SendSignalMessage(string symbol, Enums.SignalType type)
+        public void SendSignalMessage(string symbol, Dictionary<string, List<object>> values, Enums.SignalType type)
         {
             string message = type switch
             {
@@ -365,33 +374,12 @@ namespace EASYTelegramSignalBot.ViewModels
             };
 
             if (string.IsNullOrEmpty(message)) return;
-            message = message.Replace("{Symbol}", symbol);
+            message = message.Replace("{Symbol}", symbol).Replace("{Price}", Math.Round(((Kline)values["Klines"].Last()).Close, 2).ToString());
+            if (type == Enums.SignalType.Short) message = message.Replace("{Channel}", Math.Round((double)values["BOC"].Last(), 2).ToString());
+            else if (type == Enums.SignalType.Long) message = message.Replace("{Channel}", Math.Round((double)values["TOC"].Last(), 2).ToString());
+            else message = message.Replace("{Channel}", Math.Round((double)values["TOC"].Last(), 2).ToString() + " <=>" + Math.Round((double)values["BOC"].Last(), 2).ToString());
 
-            foreach (User user in Model.Users)
-            {
-                try
-                {
-                    if (user.ChatId == 0 || !user.PACSymbols.Any(x => x.Key.Equals(symbol) && x.Value > DateTime.Now)) continue;
-                    BotClients.PACClient.SendTextMessageAsync(user.ChatId, message);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Telegram Kişiye ({user.Username}) Mesaj Gönderirken Hata : {ex.Message}");
-                }
-
-            }
-
-            foreach (string? group in Settings.TelegramSettings.PACGroups)
-            {
-                try
-                {
-                    BotClients.PACClient.SendTextMessageAsync(group, message);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Telegram Gruba ({group}) Mesaj Gönderirken Hata : {ex.Message}");
-                }
-            }
+            Telegram.Bots.PAC.SendMessages(message, symbol);
         }
         #endregion
 

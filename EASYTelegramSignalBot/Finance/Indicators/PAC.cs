@@ -19,7 +19,7 @@ namespace EASYTelegramSignalBot.Finance.Indicators
         private Enums.SignalType LastSignalType { get; set; }
         private DateTime LastSignalTime { get; set; }
 
-        public PAC(string symbol, KlineInterval interval, Action<string, Dictionary<string, List<object>>> updateAction, Action<string, Enums.SignalType> signalAction, bool isPaused = false)
+        public PAC(string symbol, KlineInterval interval, Action<string, Dictionary<string, List<object>>> updateAction, Action<string, Dictionary<string, List<object>>, Enums.SignalType> signalAction, bool isPaused = false)
             : base(symbol, interval, Enums.SubscriptionType.Spot, signalAction, updateAction, isPaused)
         {
             LastSignalType = Enums.SignalType.None;
@@ -28,7 +28,7 @@ namespace EASYTelegramSignalBot.Finance.Indicators
             {
                 KlineCount = 1000,
                 Creator = this,
-                TriggerType = Enums.TriggerType.KlineUpdate,
+                TriggerType = Enums.TriggerType.KlineClose,
                 Action = Indicate
             };
             Subscribe();
@@ -75,7 +75,7 @@ namespace EASYTelegramSignalBot.Finance.Indicators
             }
 
             //Call signal action
-            Task.Run(() => SignalAction(Symbol, ChannelSignal));
+            Task.Run(() => SignalAction(Symbol, Values, ChannelSignal));
             Console.WriteLine($"PAC Signal !!! {Symbol} => {Enum.GetName(typeof(Enums.SignalType), ChannelSignal)}");
             LastSignalType = ChannelSignal;
             LastSignalTime = DateTime.Now;

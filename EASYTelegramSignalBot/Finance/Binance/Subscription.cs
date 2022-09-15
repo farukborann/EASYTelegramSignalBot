@@ -63,24 +63,31 @@ namespace EASYTelegramSignalBot.Finance.Binance
 
         private void RunFuncs(DataEvent<IBinanceStreamKlineData> data)
         {
-            if (!Klines.Last().Date.Equals(data.Data.Data.OpenTime))
+            try
             {
-                //Run KlineClose methods before add new kline
-                Actions.Where(x => x.TriggerType.Equals(Enums.TriggerType.KlineClose)).ToList().ForEach(x => Task.Run(() => x.Action(Klines.GetRange(Klines.Count - x.KlineCount, x.KlineCount))).Wait());
+                if (!Klines.Last().Date.Equals(data.Data.Data.OpenTime))
+                {
+                    //Run KlineClose methods before add new kline
+                    Actions.Where(x => x.TriggerType.Equals(Enums.TriggerType.KlineClose)).ToList().ForEach(x => Task.Run(() => x.Action(Klines.GetRange(Klines.Count - x.KlineCount, x.KlineCount))).Wait());
 
-                //Add new Kline
-                Klines.RemoveAt(0);
-                Klines.Add(data.Data.Data.ToKline());
+                    //Add new Kline
+                    Klines.RemoveAt(0);
+                    Klines.Add(data.Data.Data.ToKline());
 
-                //Run KlineOpen methods after add new kline
-                Actions.Where(x => x.TriggerType.Equals(Enums.TriggerType.KlineOpen)).ToList().ForEach(x => Task.Run(() => x.Action(Klines.GetRange(Klines.Count - x.KlineCount, x.KlineCount))));
+                    //Run KlineOpen methods after add new kline
+                    Actions.Where(x => x.TriggerType.Equals(Enums.TriggerType.KlineOpen)).ToList().ForEach(x => Task.Run(() => x.Action(Klines.GetRange(Klines.Count - x.KlineCount, x.KlineCount))));
+                }
+                else
+                {
+                    Klines[^1] = data.Data.Data.ToKline();
+                }
+                //Run KlineUpdate method when every kline update
+                Actions.Where(x => x.TriggerType.Equals(Enums.TriggerType.KlineUpdate)).ToList().ForEach(x => Task.Run(() => x.Action(Klines.GetRange(Klines.Count - x.KlineCount, x.KlineCount))));
             }
-            else
+            catch (Exception ex)
             {
-                Klines[^1] = data.Data.Data.ToKline();
+                Console.WriteLine("Error When Running Actions => {Symbol} || {ex.Message}");
             }
-            //Run KlineUpdate method when every kline update
-            Actions.Where(x => x.TriggerType.Equals(Enums.TriggerType.KlineUpdate)).ToList().ForEach(x => Task.Run(() => x.Action(Klines.GetRange(Klines.Count - x.KlineCount, x.KlineCount))));
         }
 
         public void AddAction(TickAction tickAction)

@@ -2,7 +2,7 @@
 using EASYTelegramSignalBot.Telegram;
 using System.Runtime.InteropServices;
 
-namespace EASYTelegramSignalBot
+namespace EASYTelegramSignalBot.UI.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -18,7 +18,7 @@ namespace EASYTelegramSignalBot
 
             Settings.LoadSettings();
 
-            BotClients.StartBotClients();
+            Clients.StartBotClients();
             CryptopanicNewsBot _ = new();
 
             InitializeComponent();

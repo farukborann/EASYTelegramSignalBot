@@ -4,15 +4,25 @@
     {
         public enum SignalType
         {
-            Exit = 0,
-            Long = 1,
-            Short = 2,
-            Buy = 3,
-            Sell = 4,
-            UpperLine = 5,
-            BetweenLines = 6,
-            UnderLine = 7,
-            None = 8
+            None = 0,
+
+            StrongBuy = 1,
+            MediumBuy = 2,
+            WeakBuy = 3,
+            Buy = 4,
+            Sell = 5,
+            WeakSell = 6,
+            MediumSell = 7,
+            StrongSell = 8,
+
+            Long = 9,
+            Short = 10,
+
+            UpperLine = 11,
+            BetweenLines = 12,
+            UnderLine = 13,
+
+            Exit = 14
         }
         public enum TriggerType
         {

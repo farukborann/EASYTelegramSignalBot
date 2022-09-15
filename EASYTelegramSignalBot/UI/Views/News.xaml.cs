@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace EASYTelegramSignalBot.Views
+namespace EASYTelegramSignalBot.UI.Views
 {
     /// <summary>
     /// TDI.xaml etkileşim mantığı

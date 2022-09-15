@@ -7,7 +7,7 @@ namespace EASYTelegramSignalBot.Database
     public class Context : Models.Context
     {
         private ObservableCollection<User>? _Users { get; set; }
-        public ObservableCollection<User> Users
+        public new ObservableCollection<User> Users
         {
             get
             {
@@ -22,14 +22,16 @@ namespace EASYTelegramSignalBot.Database
 
         public void DeleteUser(User user)
         {
-            base.Remove(user);
+            base.Remove(user.GetOriginalEntity());
             Users.Remove(user);
+            SaveChanges();
         }
 
         public void CreateUser(User user)
         {
-            base.Add(user);
+            base.Add(user.GetOriginalEntity());
             Users.Add(user);
+            SaveChanges();
         }
     }
 }

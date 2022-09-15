@@ -31,6 +31,7 @@ namespace EASYTelegramSignalBot.ViewModels
             SaveSettingsCommand = new DelegateCommand((o) => SaveSettings());
 
             LoadSettings();
+            UILoader.Instance.SetPageReady("News", null);
         }
 
         #region Users And Groups

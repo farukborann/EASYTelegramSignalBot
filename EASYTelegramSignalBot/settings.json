@@ -27,12 +27,17 @@
     "TDISettings": {
       "Symbols": [
         "BTCUSDT",
-        "ETHUSDT"
+        "ETHUSDT",
+        "BNBUSDT",
+        "AVAXUSDT",
+        "SOLUSDT",
+        "DYDXUSDT",
+        "SHIBUSDT"
       ],
       "SignalMessages": {
-        "Buy": "EASY TDI Bot | Alım Sinyali Geldi => {Symbol}",
-        "Sell": "EASY TDI Bot | Sat Sinyali Geldi => {Symbol}",
-        "Exit": "EASY TDI Bot | Çık Sinyali Geldi => {Symbol}"
+        "Buy": "EASY TDI Bot\r\n\r\nAlım Sinyali Geldi => {Symbol}\r\nGiriş Fiyatı => {Price}",
+        "Sell": "EASY TDI Bot\r\n\r\nSat Sinyali Geldi => {Symbol}\r\nSatış Fiyatı => {Price}",
+        "Exit": "EASY TDI Bot\r\n\r\nÇık Sinyali Geldi => {Symbol}\r\nÇıkış Fiyatı => {Price}"
       },
       "RSIPeriot": 13,
       "VotalityBandPeriot": 34,
@@ -41,37 +46,47 @@
       "RSIOversoldLevel": 31,
       "RSIOverboughtLevet": 69,
       "MinSignalPeriot": 300,
-      "KlineInterval": "OneHour"
+      "KlineInterval": "FourHour"
     },
     "PACSettings": {
       "Symbols": [
         "BTCUSDT",
-        "ETHUSDT"
+        "ETHUSDT",
+        "BNBUSDT",
+        "AVAXUSDT",
+        "SOLUSDT",
+        "DYDXUSDT",
+        "SHIBUSDT"
       ],
       "SignalMessages": {
-        "Long": "EASY PAC Bot | Long Sinyali Geldi => {Symbol}",
-        "Short": "EASY PAC Bot | Short Sinyali Geldi => {Symbol}",
-        "Exit": "EASY PAC Bot | Çık Sinyali Geldi => {Symbol}"
+        "Long": "EASY PAC Bot\r\n\r\nLong Sinyali Geldi => {Symbol}\r\nGiriş Fiyatı => {Price}\r\nKanal Değeri => {Channel}",
+        "Short": "EASY PAC Bot\r\n\r\nShort Sinyali Geldi => {Symbol}\r\nGiriş Fiyatı => {Price}\r\nKanal Değeri => {Channel}",
+        "Exit": "EASY PAC Bot\r\n\r\nÇık Sinyali Geldi => {Symbol}\r\nÇıkış Fiyatı => {Price}\r\nKanal Değeri => {Channel}"
       },
       "SMMAPeriot": 5,
-      "MinSignalPeriot": 60,
+      "MinSignalPeriot": 300,
       "KlineInterval": "FiveMinutes"
     },
     "RSISettings": {
       "Symbols": [
         "BTCUSDT",
-        "ETHUSDT"
+        "ETHUSDT",
+        "BNBUSDT",
+        "AVAXUSDT",
+        "SOLUSDT",
+        "DYDXUSDT",
+        "SHIBUSDT"
       ],
       "SignalMessages": {
-        "Overbought": "EASY RSI Bot | RSI aşırı alımı aştı => {Symbol}",
-        "Oversold": "EASY RSI Bot | RSI aşırı satışı aştı => {Symbol}",
-        "BetweenLevels": "EASY RSI Bot | RSI yola geldi => {Symbol}"
+        "Overbought": "EASY RSI Bot\r\n\r\nRSI aşırı alımı aştı => {Symbol}\r\nAnlık Fiyat => {Price}\r\nRSI Seviyesi => {RSI}",
+        "Oversold": "EASY RSI Bot\r\n\r\nRSI aşırı satışı aştı => {Symbol}\r\nAnlık Fiyat => {Price}\r\nRSI Seviyesi => {RSI}",
+        "BetweenLevels": "EASY RSI Bot\r\n\r\nRSI yola geldi => {Symbol}\r\nAnlık Fiyat => {Price}\r\nRSI Seviyesi => {RSI}"
       },
       "RSIPeriot": 14,
       "RSIOversoldLevel": 28,
       "RSIOverboughtLevet": 72,
       "MinSignalPeriot": 300,
-      "KlineInterval": "OneMinute"
+      "KlineInterval": "FourHour"
     },
     "NewsSettings": {
       "Key": "18cc0162bdb2b0a18f0e57185da26f97a191d362",

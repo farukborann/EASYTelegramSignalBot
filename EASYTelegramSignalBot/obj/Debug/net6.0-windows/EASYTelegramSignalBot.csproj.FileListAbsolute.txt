@@ -71,3 +71,4 @@ C:\Users\Ömer Faruk BORAN\Desktop\Workspace\EASYTelegramSignalBot\EASYTelegramS
 C:\Users\Ömer Faruk BORAN\Desktop\Workspace\EASYTelegramSignalBot\EASYTelegramSignalBot\obj\Debug\net6.0-windows\UI\Views\News.baml
 C:\Users\Ömer Faruk BORAN\Desktop\Workspace\EASYTelegramSignalBot\EASYTelegramSignalBot\obj\Debug\net6.0-windows\UI\Views\PAC.g.cs
 C:\Users\Ömer Faruk BORAN\Desktop\Workspace\EASYTelegramSignalBot\EASYTelegramSignalBot\obj\Debug\net6.0-windows\UI\Views\PAC.baml
+C:\Users\Ömer Faruk BORAN\Desktop\Workspace\EASYTelegramSignalBot\EASYTelegramSignalBot\obj\Debug\net6.0-windows\EASYTelegramSignalBot_Content.g.cs

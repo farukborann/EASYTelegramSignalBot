@@ -1,12 +1,16 @@
-﻿<Controls:MetroWindow x:Class="EASYTelegramSignalBot.MainWindow"
+﻿<Controls:MetroWindow x:Class="EASYTelegramSignalBot.UI.Views.MainWindow"
         xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        xmlns:Views="clr-namespace:EASYTelegramSignalBot.Views"
+        xmlns:Views="clr-namespace:EASYTelegramSignalBot.UI.Views"
+        xmlns:ViewModels="clr-namespace:EASYTelegramSignalBot.UI.ViewModels"
         Title="EASY Telegram Bot" Height="720" Width="1280">
+    <Window.DataContext>
+        <ViewModels:MainViewModel />
+    </Window.DataContext>
     <Grid>
         <TabControl Controls:HeaderedControlHelper.HeaderFontSize="18">
             <TabItem Header="TDI" Padding="10">

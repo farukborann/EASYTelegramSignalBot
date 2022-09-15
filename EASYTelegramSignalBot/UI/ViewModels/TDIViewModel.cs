@@ -55,6 +55,11 @@ namespace EASYTelegramSignalBot.ViewModels
 
             LoadSettings();
 
+            SetSubscriptions();
+        }
+
+        private void SetSubscriptions()
+        {
             foreach (string? symbol in Settings.BotsSettings.TDISettings.Symbols.ToList())
             {
                 try
@@ -63,7 +68,7 @@ namespace EASYTelegramSignalBot.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBoxResult deleteSymbol = MessageBox.Show($"{symbol} eklenirken bir hata meydana geldi : {ex.Message}\nSembol silinsin mi ?", "Hata", MessageBoxButton.YesNo, MessageBoxImage.Error);
+                    MessageBoxResult deleteSymbol = MessageBox.Show($"TDI {symbol} eklenirken bir hata meydana geldi : {ex.Message}\nSembol silinsin mi ?", "Hata", MessageBoxButton.YesNo, MessageBoxImage.Error);
                     if (deleteSymbol == MessageBoxResult.Yes)
                     {
                         Settings.BotsSettings.TDISettings.Symbols.Remove(symbol);
@@ -71,8 +76,13 @@ namespace EASYTelegramSignalBot.ViewModels
                     }
                 }
             }
+            UILoader.Instance.SetPageReady("TDI", () => Continue());
+        }
 
+        private Task Continue()
+        {
             foreach (Indicator? symbol in Model.Symbols) symbol.Continue();
+            return Task.CompletedTask;
         }
 
         #region LiveCharts
@@ -175,9 +185,8 @@ namespace EASYTelegramSignalBot.ViewModels
             {
                 if (!Connection.Context.Users.Any(x => x.Username == Model.AddUserString))
                 {
-                    User? user = new User(Model.AddUserString ?? "") { TDI = true };
-                    Connection.Context.Add(user);
-                    Connection.Context.SaveChanges();
+                    User? user = new User(Model.AddUserString) { TDI = true };
+                    Connection.Context.CreateUser(user);
                     Model.SelectedUser = user;
                     MessageBox.Show("Kullanıcı başarıyla eklendi.", "Kullanıcı Eklendi", MessageBoxButton.OK);
                 }
@@ -333,7 +342,7 @@ namespace EASYTelegramSignalBot.ViewModels
 
         private void _AddSymbol(string symbol)
         {
-            Model.Symbols.Add(new TDI(symbol, Binance.Net.Enums.KlineInterval.OneMinute, (string symbol, Dictionary<string, List<object>> values) => { }, SendSignalMessage) { });
+            Model.Symbols.Add(new TDI(symbol, Model.KlineInterval, (string symbol, Dictionary<string, List<object>> values) => { }, SendSignalMessage) { });
             Settings.BotsSettings.TDISettings.Symbols.Add(symbol);
             Settings.SaveSettings();
         }
@@ -360,44 +369,24 @@ namespace EASYTelegramSignalBot.ViewModels
         #endregion 
 
         #region Telegram Messages
-        public void SendSignalMessage(string symbol, Enums.SignalType type)
+        public void SendSignalMessage(string symbol, Dictionary<string, List<object>> values, Enums.SignalType type)
         {
             string message = type switch
             {
-                Enums.SignalType.Sell => Settings.BotsSettings.TDISettings.SignalMessages.Sell,
-                Enums.SignalType.Buy => Settings.BotsSettings.TDISettings.SignalMessages.Buy,
-                Enums.SignalType.Exit => Settings.BotsSettings.TDISettings.SignalMessages.Exit,
+                Enums.SignalType.StrongSell => Settings.BotsSettings.TDISettings.SignalMessages.Sell + "\n(Güçlü Sat)",
+                Enums.SignalType.MediumSell => Settings.BotsSettings.TDISettings.SignalMessages.Sell + "\n(Orta Sat)",
+                Enums.SignalType.WeakSell => Settings.BotsSettings.TDISettings.SignalMessages.Sell + "\n(Zayıf Sat)",
+                Enums.SignalType.StrongBuy => Settings.BotsSettings.TDISettings.SignalMessages.Buy + "\n(Güçlü Al)",
+                Enums.SignalType.MediumBuy => Settings.BotsSettings.TDISettings.SignalMessages.Buy + "\n(Orta Al)",
+                Enums.SignalType.WeakBuy => Settings.BotsSettings.TDISettings.SignalMessages.Buy + "\n(Zayıf Al)",
                 _ => "",
             };
 
             if (string.IsNullOrEmpty(message)) return;
-            message = message.Replace("{Symbol}", symbol);
 
-            foreach (User user in Model.Users)
-            {
-                try
-                {
-                    if (user.ChatId == 0 || !user.TDISymbols.Any(x => x.Key.Equals(symbol) && x.Value > DateTime.Now)) continue;
-                    BotClients.TDIClient.SendTextMessageAsync(user.ChatId, message);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Telegram Kişiye ({user.Username}) Mesaj Gönderirken Hata : {ex.Message}");
-                }
+            message = message.Replace("{Symbol}", symbol).Replace("{Price}", Math.Round(((Kline)values["Klines"].Last()).Close, 2).ToString());
 
-            }
-
-            foreach (string? group in Settings.TelegramSettings.TDIGroups)
-            {
-                try
-                {
-                    BotClients.TDIClient.SendTextMessageAsync(group, message);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Telegram Gruba ({group}) Mesaj Gönderirken Hata : {ex.Message}");
-                }
-            }
+            Telegram.Bots.TDI.SendMessages(message, symbol);
         }
         #endregion
 

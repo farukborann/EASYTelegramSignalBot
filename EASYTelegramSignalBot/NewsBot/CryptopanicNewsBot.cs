@@ -70,7 +70,7 @@ namespace EASYTelegramSignalBot.NewsBot
                         Replace("{Link}", $"[{report.source.title}](https://{report.source.domain}/)").
                         Replace("{Coins}", currencies);
 
-                    Task.Run(() => SendMessages(message));
+                    Task.Run(() => Telegram.Bots.News.SendMessages(message));
                 }
                 LastReportId = News[0].id;
             }
@@ -78,36 +78,36 @@ namespace EASYTelegramSignalBot.NewsBot
             Console.WriteLine("Cryptopanic News Bot Haberler Güncellendi");
         }
 
-        private static Task SendMessages(string message)
-        {
-            foreach (User user in Database.Connection.Context.Users)
-            {
-                try
-                {
-                    if (user.ChatId == 0 || !user.News) continue;
-                    BotClients.NewsClient.SendTextMessageAsync(user.ChatId, message, parseMode: TeleApi.Types.Enums.ParseMode.Markdown);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Telegram Kişiye ({user.Username}) Mesaj Gönderirken Hata : {ex.Message}");
-                }
+        //private static Task SendMessages(string message)
+        //{
+        //    foreach (User user in Database.Connection.Context.Users)
+        //    {
+        //        try
+        //        {
+        //            if (user.ChatId == 0 || !user.News) continue;
+        //            BotClients.NewsClient.SendTextMessageAsync(user.ChatId, message, parseMode: TeleApi.Types.Enums.ParseMode.Markdown);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Console.WriteLine($"Telegram Kişiye ({user.Username}) Mesaj Gönderirken Hata : {ex.Message}");
+        //        }
 
-            }
+        //    }
 
-            foreach (string? group in Settings.TelegramSettings.TDIGroups)
-            {
-                try
-                {
-                    BotClients.NewsClient.SendTextMessageAsync(group, message, parseMode: TeleApi.Types.Enums.ParseMode.Markdown);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Telegram Gruba ({group}) Mesaj Gönderirken Hata : {ex.Message}");
-                }
-            }
+        //    foreach (string? group in Settings.TelegramSettings.NewsGroups)
+        //    {
+        //        try
+        //        {
+        //            BotClients.NewsClient.SendTextMessageAsync(group, message, parseMode: TeleApi.Types.Enums.ParseMode.Markdown);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Console.WriteLine($"Telegram Gruba ({group}) Mesaj Gönderirken Hata : {ex.Message}");
+        //        }
+        //    }
 
-            return Task.Delay(0);
-        }
+        //    return Task.Delay(0);
+        //}
 
         private async Task<Response?> GetNews()
         {

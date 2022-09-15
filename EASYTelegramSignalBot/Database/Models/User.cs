@@ -53,16 +53,18 @@ namespace EASYTelegramSignalBot.Database.Models
         public User(Entities.User user)
         {
             this.user = user;
-            TDISymbols = new();
-            PACSymbols = new();
+            UpdateUserSymbols();
         }
 
-        public User(string Username)
+        public User(string? Username)
         {
+            if (string.IsNullOrEmpty(Username)) throw new ArgumentNullException(nameof(Username), "Username değeri boş olamaz.");
             user = new(Username);
 
             TDISymbols = new();
             PACSymbols = new();
+
+            SaveUserSymbols();
         }
 
         public void UpdateUserSymbols()
@@ -75,6 +77,11 @@ namespace EASYTelegramSignalBot.Database.Models
         {
             user.TDISymbolValues = JsonConvert.SerializeObject(TDISymbols);
             user.PACSymbolValues = JsonConvert.SerializeObject(PACSymbols);
+        }
+
+        public Entities.User GetOriginalEntity()
+        {
+            return user;
         }
     }
 }

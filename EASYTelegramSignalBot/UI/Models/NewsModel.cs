@@ -84,8 +84,8 @@ namespace EASYTelegramSignalBot.Models
         //Groups
         public static List<string>? GroupIds
         {
-            get => Settings.TelegramSettings.RSIGroups;
-            set => Settings.TelegramSettings.RSIGroups = value ?? new();
+            get => Settings.TelegramSettings.NewsGroups;
+            set => Settings.TelegramSettings.NewsGroups = value ?? new();
         }
 
         private string? selectedGroup;

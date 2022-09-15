@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="EASYTelegramSignalBot.Views.TDI"
+﻿<UserControl x:Class="EASYTelegramSignalBot.UI.Views.TDI"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -98,7 +98,7 @@
                     <TextBlock Text="Exit Sinyal Mesajı" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
                     <TextBox Name="ExitSignalMessageTextBox" Grid.Row="2" Grid.Column="1" Text="{Binding Model.ExitSignalString}" AcceptsReturn="True" TextWrapping="Wrap" Margin="25,10,25,15" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
 
-                    <TextBlock Text="Mesaj Parametreleri > {Symbol} | Sembol Adı" Grid.Row="3" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left" />
+                    <TextBlock Text="Mesaj Parametreleri > {Symbol} | Sembol Adı ||| {Price} | Son Fiyat" Grid.Row="3" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left" />
 
                     <Grid Grid.Row="4" Grid.Column="1" HorizontalAlignment="Center">
                         <Grid.RowDefinitions>

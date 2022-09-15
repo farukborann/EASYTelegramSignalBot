@@ -18,7 +18,7 @@ namespace EASYTelegramSignalBot.Finance.Indicators
         private Enums.SignalType LastSignalType { get; set; }
         private DateTime LastSignalTime { get; set; }
 
-        public RSI(string symbol, KlineInterval interval, Action<string, Dictionary<string, List<object>>> updateAction, Action<string, Enums.SignalType> signalAction, bool isPaused = false)
+        public RSI(string symbol, KlineInterval interval, Action<string, Dictionary<string, List<object>>> updateAction, Action<string, Dictionary<string, List<object>>, Enums.SignalType> signalAction, bool isPaused = false)
             : base(symbol, interval, Enums.SubscriptionType.Spot, signalAction, updateAction, isPaused)
         {
             LastSignalType = Enums.SignalType.None;
@@ -70,7 +70,7 @@ namespace EASYTelegramSignalBot.Finance.Indicators
                 return;
             }
 
-            Task.Run(() => SignalAction(Symbol, RSI));
+            Task.Run(() => SignalAction(Symbol, Values, RSI));
             Console.WriteLine($"RSI Signal !!! {Symbol} => {Enum.GetName(typeof(Enums.SignalType), RSI)}");
             LastSignalType = RSI;
             LastSignalTime = DateTime.Now;

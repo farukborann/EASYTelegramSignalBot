@@ -17,7 +17,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Telegram.Bot;
 
 namespace EASYTelegramSignalBot.ViewModels
 {
@@ -114,6 +113,7 @@ namespace EASYTelegramSignalBot.ViewModels
             Model.KlineSeriesCollection.ToList().ForEach(x => x.Values.Clear());
             Model.IndicatorsSeriesCollection.ToList().ForEach(x => x.Values.Clear());
             Model.UISymbol = Model.SelectedSymbol.Symbol;
+            UpdateUI(Model.UISymbol, Model.Symbols.First(x => x.Symbol == Model.UISymbol).Values);
             Model.Symbols.First(x => x.Symbol == Model.UISymbol).UpdateAction = UpdateUI;
             Model.KlineSeries.Title = Model.UISymbol;
         }
@@ -328,6 +328,7 @@ namespace EASYTelegramSignalBot.ViewModels
                 if (Model.Symbols.Any(x => x.Symbol == Model.AddSymbolString))
                 {
                     MessageBox.Show("Bu sembol zaten mevcut.", "Sembol mevcut", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Model.SelectedSymbol = Model.Symbols.First(x => x.Symbol == Model.AddSymbolString);
                     return;
                 }
 
@@ -374,11 +375,9 @@ namespace EASYTelegramSignalBot.ViewModels
             string message = type switch
             {
                 Enums.SignalType.StrongSell => Settings.BotsSettings.TDISettings.SignalMessages.Sell + "\n(Güçlü Sat)",
-                Enums.SignalType.MediumSell => Settings.BotsSettings.TDISettings.SignalMessages.Sell + "\n(Orta Sat)",
-                Enums.SignalType.WeakSell => Settings.BotsSettings.TDISettings.SignalMessages.Sell + "\n(Zayıf Sat)",
+                Enums.SignalType.MediumSell => Settings.BotsSettings.TDISettings.SignalMessages.Sell + "\n(Sat)",
                 Enums.SignalType.StrongBuy => Settings.BotsSettings.TDISettings.SignalMessages.Buy + "\n(Güçlü Al)",
-                Enums.SignalType.MediumBuy => Settings.BotsSettings.TDISettings.SignalMessages.Buy + "\n(Orta Al)",
-                Enums.SignalType.WeakBuy => Settings.BotsSettings.TDISettings.SignalMessages.Buy + "\n(Zayıf Al)",
+                Enums.SignalType.MediumBuy => Settings.BotsSettings.TDISettings.SignalMessages.Buy + "\n(Al)",
                 _ => "",
             };
 

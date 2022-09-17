@@ -117,7 +117,7 @@ namespace EASYTelegramSignalBot.Finance.Binance
 
         public void GetKlines()
         {
-            if (Limit < 1500)
+            if (Limit <= 1500)
             {
                 Klines = GetKlinesAsync(Symbol, Interval, Limit);
                 return;

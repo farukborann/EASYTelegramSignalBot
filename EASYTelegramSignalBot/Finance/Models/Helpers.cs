@@ -1,5 +1,6 @@
 ﻿using Binance.Net.Interfaces;
 using EASYTelegramSignalBot.Finance.Binance;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -30,6 +31,11 @@ namespace EASYTelegramSignalBot.Finance.Models
                 _Volume = binanceKline.QuoteVolume,
             };
             return kline;
+        }
+
+        public static KeyValuePair<DateTime, double> ElementAt_Last(this Dictionary<DateTime, double> dict, int index)
+        {
+            return dict.ElementAt(dict.Count - index);
         }
     }
 }

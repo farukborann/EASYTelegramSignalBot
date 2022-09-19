@@ -3,10 +3,9 @@ using EASYTelegramSignalBot.Database;
 using EASYTelegramSignalBot.Database.Models;
 using EASYTelegramSignalBot.Finance;
 using EASYTelegramSignalBot.Finance.Binance;
-using EASYTelegramSignalBot.Finance.Indicators;
+using EASYTelegramSignalBot.Finance.Indicators.RSI;
 using EASYTelegramSignalBot.Finance.Models;
 using EASYTelegramSignalBot.Models;
-using EASYTelegramSignalBot.Telegram;
 using EASYTelegramSignalBot.UI.Helpers;
 using LiveCharts;
 using LiveCharts.Defaults;
@@ -17,7 +16,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Telegram.Bot;
 
 namespace EASYTelegramSignalBot.ViewModels
 {
@@ -62,7 +60,7 @@ namespace EASYTelegramSignalBot.ViewModels
             {
                 try
                 {
-                    Model.Symbols.Add(new RSI(symbol, Model.KlineInterval, (string symbol, Dictionary<string, List<object>> values) => { }, SendSignalMessage, true) { });
+                    Model.Symbols.Add(new RSI(symbol, Model.KlineInterval, (string symbol, RSIResult values) => { }, SendSignalMessage, true) { });
                 }
                 catch (Exception ex)
                 {
@@ -79,19 +77,19 @@ namespace EASYTelegramSignalBot.ViewModels
 
         private Task Continue()
         {
-            foreach (Indicator? symbol in Model.Symbols) symbol.Continue();
+            foreach (RSI? symbol in Model.Symbols) symbol.Continue();
             return Task.CompletedTask;
         }
 
         #region LiveCharts
-        public void UpdateUI(string symbol, Dictionary<string, List<object>> Values)
+        public void UpdateUI(string symbol, RSIResult Values)
         {
             if (symbol != Model.UISymbol) return;
 
-            List<Kline>? Klines = Values["Klines"].Select(x => (Kline)x).ToList();
+            List<Kline>? Klines = Values.Klines.ToList();
             UpdateKlines(Klines);
 
-            List<object>? RSI = Values["RSI"].ToList();
+            List<object>? RSI = Values.RSI.Select(x => (object)x).ToList();
             UpdateIndicators(Klines, RSI);
         }
 
@@ -103,7 +101,7 @@ namespace EASYTelegramSignalBot.ViewModels
 
             if (Model.Symbols.Any(x => x.Symbol == Model.UISymbol))
             {
-                Model.Symbols.First(x => x.Symbol == Model.UISymbol).UpdateAction = (string symbol, Dictionary<string, List<object>> values) => { };
+                Model.Symbols.First(x => x.Symbol == Model.UISymbol).UpdateAction = (string symbol, RSIResult values) => { };
             }
             Model.KlineSeriesCollection.ToList().ForEach(x => x.Values.Clear());
             Model.IndicatorsSeriesCollection.ToList().ForEach(x => x.Values.Clear());
@@ -267,7 +265,7 @@ namespace EASYTelegramSignalBot.ViewModels
 
         private void _AddSymbol(string symbol, bool isPaused = false)
         {
-            Model.Symbols.Add(new RSI(symbol, Model.KlineInterval, (string symbol, Dictionary<string, List<object>> values) => { }, SendSignalMessage, isPaused: isPaused) { });
+            Model.Symbols.Add(new RSI(symbol, Model.KlineInterval, (string symbol, RSIResult values) => { }, SendSignalMessage, isPaused: isPaused) { });
             Settings.BotsSettings.RSISettings.Symbols.Add(symbol);
             Settings.SaveSettings();
         }
@@ -289,7 +287,7 @@ namespace EASYTelegramSignalBot.ViewModels
                     MessageBox.Show($"{x.Name} eklenirken bir hata meydana geldi : {ex.Message}", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
 
-                foreach(var symbol in Model.Symbols)
+                foreach (RSI? symbol in Model.Symbols)
                 {
                     symbol.Continue();
                 }
@@ -300,7 +298,7 @@ namespace EASYTelegramSignalBot.ViewModels
         #endregion 
 
         #region Telegram Messages
-        public void SendSignalMessage(string symbol, Dictionary<string, List<object>> values, Enums.SignalType type)
+        public void SendSignalMessage(string symbol, RSIResult values, Enums.SignalType type)
         {
             string message = type switch
             {
@@ -311,7 +309,64 @@ namespace EASYTelegramSignalBot.ViewModels
             };
 
             if (string.IsNullOrEmpty(message)) return;
-            message = message.Replace("{Symbol}", symbol).Replace("{Price}", Math.Round(((Kline)values["Klines"].Last()).Close, 2).ToString()).Replace("{RSI}", Math.Round((double)values["RSI"].Last(), 2).ToString());
+
+            Binance.Net.Objects.Models.Spot.BinanceSymbol? exchangeInfo = StaticBinance.ExchangeInfos.Spot.First(x => x.Name == symbol);
+            Kline? lastKline = values.Klines.Last();
+
+            var tickSize = exchangeInfo.PriceFilter?.TickSize ?? (decimal)0.00000001;
+
+            string priceTrend = values.Klines[^2].Close > values.Klines[^1].Close ? " ⬇️" : " ⬆️";
+            string price = Binance.Net.BinanceHelpers.FloorPrice(tickSize, lastKline.Close).ToString() + priceTrend;
+
+            string rsi = Math.Round(values.RSI.Last(), 2).ToString();
+
+            string periotShortString = Model.KlineInterval switch
+            {
+                KlineInterval.OneSecond => "1sn",
+                KlineInterval.OneMinute => "1dk",
+                KlineInterval.ThreeMinutes => "3dk",
+                KlineInterval.FiveMinutes => "5dk",
+                KlineInterval.FifteenMinutes => "15dk",
+                KlineInterval.ThirtyMinutes => "30dk",
+                KlineInterval.OneHour => "1s",
+                KlineInterval.TwoHour => "2s",
+                KlineInterval.FourHour => "4s",
+                KlineInterval.SixHour => "6s",
+                KlineInterval.EightHour => "8s",
+                KlineInterval.TwelveHour => "12s",
+                KlineInterval.OneDay => "1g",
+                KlineInterval.ThreeDay => "3g",
+                KlineInterval.OneWeek => "1h",
+                KlineInterval.OneMonth => "1a",
+                _ => $"{(int)Model.KlineInterval / 3600}s"
+            };
+
+            string periotLongString = Model.KlineInterval switch
+            {
+                KlineInterval.OneSecond => "1 Saniye",
+                KlineInterval.OneMinute => "1 Dakika",
+                KlineInterval.ThreeMinutes => "3 Dakika",
+                KlineInterval.FiveMinutes => "5 Dakika",
+                KlineInterval.FifteenMinutes => "15 Dakika",
+                KlineInterval.ThirtyMinutes => "30 Dakika",
+                KlineInterval.OneHour => "1 Saat",
+                KlineInterval.TwoHour => "2 Saat",
+                KlineInterval.FourHour => "4 Saat",
+                KlineInterval.SixHour => "6 Saat",
+                KlineInterval.EightHour => "8 Saat",
+                KlineInterval.TwelveHour => "12 Saat",
+                KlineInterval.OneDay => "1 Gün",
+                KlineInterval.ThreeDay => "3 Gün",
+                KlineInterval.OneWeek => "1 Hafta",
+                KlineInterval.OneMonth => "1 Ay",
+                _ => $"{(int)Model.KlineInterval / 3600} Saat"
+            };
+
+            message = message.Replace("{Symbol}", symbol)
+                .Replace("{Price}", price)
+                .Replace("{RSI}", rsi)
+                .Replace("{PeriotLong}", periotLongString)
+                .Replace("{PeriotShort}", periotShortString);
 
             Telegram.Bots.RSI.SendMessages(message);
         }

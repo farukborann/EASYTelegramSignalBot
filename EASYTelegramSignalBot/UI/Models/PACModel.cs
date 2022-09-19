@@ -1,7 +1,7 @@
 ﻿using Binance.Net.Enums;
 using EASYTelegramSignalBot.Database;
 using EASYTelegramSignalBot.Database.Models;
-using EASYTelegramSignalBot.Finance.Models;
+using EASYTelegramSignalBot.Finance.Indicators.PAC;
 using EASYTelegramSignalBot.UI.Helpers;
 using LiveCharts;
 using LiveCharts.Defaults;
@@ -21,7 +21,7 @@ namespace EASYTelegramSignalBot.Models
 
         public PACModel()
         {
-            KlineSeries = new() { Name="Klines", Values = new ChartValues<OhlcPoint>() };
+            KlineSeries = new() { Name = "Klines", Values = new ChartValues<OhlcPoint>() };
             TOC = new() { Title = "Top Of Channel", LineSmoothness = 0, Stroke = Brushes.Green, PointGeometrySize = 0, Values = new ChartValues<double>(), Fill = Brushes.Transparent };
             BOC = new() { Title = "Bottom Of Channel", LineSmoothness = 0, Stroke = Brushes.Red, PointGeometrySize = 0, Values = new ChartValues<double>(), Fill = Brushes.Transparent };
             KlineSeriesCollection = new()
@@ -150,15 +150,15 @@ namespace EASYTelegramSignalBot.Models
         #endregion
 
         #region Symbols
-        private ObservableCollection<Indicator>? symbols;
-        public ObservableCollection<Indicator> Symbols
+        private ObservableCollection<PAC>? symbols;
+        public ObservableCollection<PAC> Symbols
         {
             get => symbols ??= new();
             set { symbols = value; PropertyChanged?.InvokeAll(this, nameof(Symbols)); }
         }
 
-        private Indicator? selectedSymbol;
-        public Indicator? SelectedSymbol
+        private PAC? selectedSymbol;
+        public PAC? SelectedSymbol
         {
             get => selectedSymbol;
             set { selectedSymbol = value; PropertyChanged?.InvokeAll(this, nameof(SelectedSymbol)); }

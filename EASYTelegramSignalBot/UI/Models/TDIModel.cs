@@ -1,7 +1,7 @@
 ﻿using Binance.Net.Enums;
 using EASYTelegramSignalBot.Database;
 using EASYTelegramSignalBot.Database.Models;
-using EASYTelegramSignalBot.Finance.Models;
+using EASYTelegramSignalBot.Finance.Indicators.TDI;
 using EASYTelegramSignalBot.UI.Helpers;
 using LiveCharts;
 using LiveCharts.Defaults;
@@ -29,16 +29,16 @@ namespace EASYTelegramSignalBot.Models
 
             FastMA = new() { Title = "RSI Price Line", LineSmoothness = 0, Stroke = Brushes.Green, PointGeometrySize = 0, Values = new ChartValues<double>(), Fill = Brushes.Transparent };
             SlowMA = new() { Title = "Trade Signal Line", LineSmoothness = 0, Stroke = Brushes.Red, PointGeometrySize = 0, Values = new ChartValues<double>(), Fill = Brushes.Transparent };
-            UpVB = new() { Title = "Up Votality Band", LineSmoothness = 0, Stroke = Brushes.Blue, PointGeometrySize = 0, Values = new ChartValues<double>(), Fill = Brushes.Transparent };
-            MiddleVB = new() { Title = "Middle Votality Band", LineSmoothness = 0, Stroke = Brushes.Yellow, PointGeometrySize = 0, Values = new ChartValues<double>(), Fill = Brushes.Transparent };
-            DownVB = new() { Title = "Down Votality Band", LineSmoothness = 0, Stroke = Brushes.Blue, PointGeometrySize = 0, Values = new ChartValues<double>(), Fill = Brushes.Transparent };
+            //UpVB = new() { Title = "Up Votality Band", LineSmoothness = 0, Stroke = Brushes.Blue, PointGeometrySize = 0, Values = new ChartValues<double>(), Fill = Brushes.Transparent };
+            //MiddleVB = new() { Title = "Middle Votality Band", LineSmoothness = 0, Stroke = Brushes.Yellow, PointGeometrySize = 0, Values = new ChartValues<double>(), Fill = Brushes.Transparent };
+            //DownVB = new() { Title = "Down Votality Band", LineSmoothness = 0, Stroke = Brushes.Blue, PointGeometrySize = 0, Values = new ChartValues<double>(), Fill = Brushes.Transparent };
             IndicatorsSeriesCollection = new()
             {
                 FastMA,
                 SlowMA,
-                UpVB,
-                MiddleVB,
-                DownVB
+                //UpVB,
+                //MiddleVB,
+                //DownVB
             };
         }
 
@@ -159,15 +159,15 @@ namespace EASYTelegramSignalBot.Models
         #endregion
 
         #region Symbols
-        private ObservableCollection<Indicator>? symbols;
-        public ObservableCollection<Indicator> Symbols
+        private ObservableCollection<TDI>? symbols;
+        public ObservableCollection<TDI> Symbols
         {
             get => symbols ??= new();
             set { symbols = value; PropertyChanged?.InvokeAll(this, nameof(Symbols)); }
         }
 
-        private Indicator? selectedSymbol;
-        public Indicator? SelectedSymbol
+        private TDI? selectedSymbol;
+        public TDI? SelectedSymbol
         {
             get => selectedSymbol;
             set { selectedSymbol = value; PropertyChanged?.InvokeAll(this, nameof(SelectedSymbol)); }

@@ -1,7 +1,7 @@
 ﻿using Binance.Net.Enums;
 using EASYTelegramSignalBot.Database;
 using EASYTelegramSignalBot.Database.Models;
-using EASYTelegramSignalBot.Finance.Models;
+using EASYTelegramSignalBot.Finance.Indicators.RSI;
 using EASYTelegramSignalBot.UI.Helpers;
 using LiveCharts;
 using LiveCharts.Defaults;
@@ -147,15 +147,15 @@ namespace EASYTelegramSignalBot.Models
         #endregion
 
         #region Symbols
-        private ObservableCollection<Indicator>? symbols;
-        public ObservableCollection<Indicator> Symbols
+        private ObservableCollection<RSI>? symbols;
+        public ObservableCollection<RSI> Symbols
         {
             get => symbols ??= new();
             set { symbols = value; PropertyChanged?.InvokeAll(this, nameof(Symbols)); }
         }
 
-        private Indicator? selectedSymbol;
-        public Indicator? SelectedSymbol
+        private RSI? selectedSymbol;
+        public RSI? SelectedSymbol
         {
             get => selectedSymbol;
             set { selectedSymbol = value; PropertyChanged?.InvokeAll(this, nameof(SelectedSymbol)); }

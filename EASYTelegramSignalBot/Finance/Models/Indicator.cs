@@ -1,12 +1,11 @@
 ﻿using Binance.Net.Enums;
 using EASYTelegramSignalBot.Finance.Binance;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace EASYTelegramSignalBot.Finance.Models
 {
-    public abstract class Indicator : IDisposable
+    public abstract class Indicator<Result> where Result : IndicatorResult
     {
         private bool isDisposed;
         internal bool isPaused;
@@ -14,12 +13,12 @@ namespace EASYTelegramSignalBot.Finance.Models
         public string Symbol { get; set; }
         public KlineInterval Interval { get; set; }
         private Enums.SubscriptionType SubscriptionType { get; set; }
-        public Action<string, Dictionary<string, List<object>>, Enums.SignalType> SignalAction { get; set; } // run when get signal
-        public Action<string, Dictionary<string, List<object>>> UpdateAction { get; set; } // run when get every update
+        public Action<string, Result, Enums.SignalType> SignalAction { get; set; } // run when get signal
+        public Action<string, Result> UpdateAction { get; set; } // run when get every update
         public KlineSubscription? Subscription { get; set; }
-        public TickAction? TickAction { get; set; }
+        public TickAction _TickAction { get; set; }
 
-        public Dictionary<string, List<object>>? Values { get; set; } // Send parameter  in update action
+        public Result Values { get; set; } // Send parameter in update action
 
         public void Dispose()
         {
@@ -32,13 +31,13 @@ namespace EASYTelegramSignalBot.Finance.Models
             if (isDisposed) return;
 
             if (Subscription == null) return;
-            TickAction? func = Subscription.Actions.First(x => x.Creator == this);
-            StaticBinance.DeleteAction(Subscription, func);
+            //TickAction<Result> func = Subscription.Actions.First(x => x.Creator == this);
+            StaticBinance.DeleteAction(Subscription, _TickAction);
 
             isDisposed = true;
         }
 
-        protected Indicator(string symbol, KlineInterval interval, Enums.SubscriptionType subscriptionType, Action<string, Dictionary<string, List<object>>, Enums.SignalType> signalAction, Action<string, Dictionary<string, List<object>>> updateAction, bool isPaused = false)
+        protected Indicator(string symbol, KlineInterval interval, Enums.SubscriptionType subscriptionType, Action<string, Result, Enums.SignalType> signalAction, Action<string, Result> updateAction, bool isPaused = false)
         {
             if ((subscriptionType == Enums.SubscriptionType.Spot && !StaticBinance.ExchangeInfos.Spot.ToList().Any(x => x.Name.Equals(symbol))) ||
                 (subscriptionType == Enums.SubscriptionType.UsdFutures && !StaticBinance.ExchangeInfos.Usdt.Any(x => x.Name.ToLower().Equals(symbol.ToLower()))) ||
@@ -57,20 +56,20 @@ namespace EASYTelegramSignalBot.Finance.Models
 
         public void Subscribe()
         {
-            if (TickAction == null) return;
+            if (_TickAction == null) return;
             Subscription = StaticBinance.SubscribeToKlineUpdatesAsync(
                 SubscriptionType,
                 Symbol,
                 Interval,
-                TickAction);
+                _TickAction);
         }
 
         public void ChangeInterval(KlineInterval klineInterval)
         {
             if (Subscription == null) return;
             Interval = klineInterval;
-            TickAction? func = Subscription.Actions.First(x => x.Creator == this);
-            StaticBinance.DeleteAction(Subscription, func);
+            //TickAction? func = Subscription.Actions.First(x => x.Creator == this);
+            StaticBinance.DeleteAction(Subscription, _TickAction);
 
             Subscribe();
         }

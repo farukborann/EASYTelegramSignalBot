@@ -6,7 +6,7 @@ namespace EASYTelegramSignalBot.UI.ViewModels
     {
         public MainViewModel()
         {
-            var _ = UILoader.Instance;
+            UILoader? _ = UILoader.Instance;
         }
     }
 }

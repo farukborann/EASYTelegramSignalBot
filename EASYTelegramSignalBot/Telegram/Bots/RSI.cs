@@ -50,12 +50,12 @@ namespace EASYTelegramSignalBot.Telegram.Bots
 
         public static void SendMessages(string message)
         {
-            var Users = Database.Connection.Context.Users.Where(x => x.ChatId != 0);
+            IEnumerable<Database.Models.User>? Users = Database.Connection.Context.Users.Where(x => x.ChatId != 0);
             foreach (Database.Models.User user in Users)
             {
                 try
                 {
-                    Clients.RSIClient.SendTextMessageAsync(user.ChatId, message);
+                    Clients.RSIClient.SendTextMessageAsync(user.ChatId, message, ParseMode.Markdown);
                 }
                 catch (Exception ex)
                 {
@@ -68,7 +68,7 @@ namespace EASYTelegramSignalBot.Telegram.Bots
             {
                 try
                 {
-                    Clients.RSIClient.SendTextMessageAsync(group, message);
+                    Clients.RSIClient.SendTextMessageAsync(group, message, ParseMode.Markdown);
                 }
                 catch (Exception ex)
                 {

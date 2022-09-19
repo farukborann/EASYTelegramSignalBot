@@ -3,10 +3,9 @@ using EASYTelegramSignalBot.Database;
 using EASYTelegramSignalBot.Database.Models;
 using EASYTelegramSignalBot.Finance;
 using EASYTelegramSignalBot.Finance.Binance;
-using EASYTelegramSignalBot.Finance.Indicators;
+using EASYTelegramSignalBot.Finance.Indicators.TDI;
 using EASYTelegramSignalBot.Finance.Models;
 using EASYTelegramSignalBot.Models;
-using EASYTelegramSignalBot.Telegram;
 using EASYTelegramSignalBot.UI.Helpers;
 using LiveCharts;
 using LiveCharts.Defaults;
@@ -63,7 +62,7 @@ namespace EASYTelegramSignalBot.ViewModels
             {
                 try
                 {
-                    Model.Symbols.Add(new TDI(symbol, Model.KlineInterval, (string symbol, Dictionary<string, List<object>> values) => { }, SendSignalMessage, true) { });
+                    Model.Symbols.Add(new TDI(symbol, Model.KlineInterval, (string symbol, TDIResult values) => { }, SendSignalMessage, true) { });
                 }
                 catch (Exception ex)
                 {
@@ -80,24 +79,25 @@ namespace EASYTelegramSignalBot.ViewModels
 
         private Task Continue()
         {
-            foreach (Indicator? symbol in Model.Symbols) symbol.Continue();
+            foreach (TDI? symbol in Model.Symbols) symbol.Continue();
             return Task.CompletedTask;
         }
 
         #region LiveCharts
-        public void UpdateUI(string symbol, Dictionary<string, List<object>> Values)
+        public void UpdateUI(string symbol, TDIResult Values)
         {
             if (symbol != Model.UISymbol) return;
 
-            List<Kline>? Klines = Values["Klines"].Select(x => (Kline)x).ToList();
+            List<Kline>? Klines = Values.Klines.ToList();
             UpdateKlines(Klines);
 
-            List<object>? FastMA = Values["FastMA"].ToList();
-            List<object>? SlowMA = Values["SlowMA"].ToList();
-            List<object>? UpVB = Values["UpVB"].ToList();
-            List<object>? MiddleVB = Values["MiddleVB"].ToList();
-            List<object>? DownVB = Values["DownVB"].ToList();
-            UpdateIndicators(Klines, FastMA, SlowMA, UpVB, MiddleVB, DownVB);
+            List<object>? FastMA = Values.RSI_PL.Select(x => (object)x).ToList();
+            List<object>? SlowMA = Values.TSL.Select(x => (object)x).ToList();
+            //List<object>? UpVB = Values["UpVB"].ToList();
+            //List<object>? MiddleVB = Values["MiddleVB"].ToList();
+            //List<object>? DownVB = Values["DownVB"].ToList();
+            //UpdateIndicators(Klines, FastMA, SlowMA, UpVB, MiddleVB, DownVB);
+            UpdateIndicators(Klines, FastMA, SlowMA);
         }
 
         public void SetUISymbol()
@@ -108,7 +108,7 @@ namespace EASYTelegramSignalBot.ViewModels
 
             if (Model.Symbols.Any(x => x.Symbol == Model.UISymbol))
             {
-                Model.Symbols.First(x => x.Symbol == Model.UISymbol).UpdateAction = (string symbol, Dictionary<string, List<object>> values) => { };
+                Model.Symbols.First(x => x.Symbol == Model.UISymbol).UpdateAction = (string symbol, TDIResult values) => { };
             }
             Model.KlineSeriesCollection.ToList().ForEach(x => x.Values.Clear());
             Model.IndicatorsSeriesCollection.ToList().ForEach(x => x.Values.Clear());
@@ -146,13 +146,18 @@ namespace EASYTelegramSignalBot.ViewModels
             Model.KlineSeriesCollection[0].Values.Add(new OhlcPoint((double)Klines.Last()._Open, (double)Klines.Last()._High, (double)Klines.Last()._Low, (double)Klines.Last()._Close));
         }
 
-        public void UpdateIndicators(IEnumerable<Kline> Klines, IEnumerable<object> FastMA, IEnumerable<object> SlowMA, IEnumerable<object> UpVB, IEnumerable<object> MiddleVB, IEnumerable<object> DownVB)
+        //public void UpdateIndicators(IEnumerable<Kline> Klines, IEnumerable<object> FastMA, IEnumerable<object> SlowMA, IEnumerable<object> UpVB, IEnumerable<object> MiddleVB, IEnumerable<object> DownVB)
+        //{
+        //    UpdateIndicator(Klines, Model.FastMA.Values, FastMA);
+        //    UpdateIndicator(Klines, Model.SlowMA.Values, SlowMA);
+        //    UpdateIndicator(Klines, Model.UpVB.Values, UpVB);
+        //    UpdateIndicator(Klines, Model.MiddleVB.Values, MiddleVB);
+        //    UpdateIndicator(Klines, Model.DownVB.Values, DownVB);
+        //}
+        public void UpdateIndicators(IEnumerable<Kline> Klines, IEnumerable<object> FastMA, IEnumerable<object> SlowMA)
         {
             UpdateIndicator(Klines, Model.FastMA.Values, FastMA);
             UpdateIndicator(Klines, Model.SlowMA.Values, SlowMA);
-            UpdateIndicator(Klines, Model.UpVB.Values, UpVB);
-            UpdateIndicator(Klines, Model.MiddleVB.Values, MiddleVB);
-            UpdateIndicator(Klines, Model.DownVB.Values, DownVB);
         }
 
         private void UpdateIndicator(IEnumerable<Kline> Klines, IChartValues values, IEnumerable<object> newValues)
@@ -343,7 +348,7 @@ namespace EASYTelegramSignalBot.ViewModels
 
         private void _AddSymbol(string symbol)
         {
-            Model.Symbols.Add(new TDI(symbol, Model.KlineInterval, (string symbol, Dictionary<string, List<object>> values) => { }, SendSignalMessage) { });
+            Model.Symbols.Add(new TDI(symbol, Model.KlineInterval, (string symbol, TDIResult values) => { }, SendSignalMessage) { });
             Settings.BotsSettings.TDISettings.Symbols.Add(symbol);
             Settings.SaveSettings();
         }
@@ -370,20 +375,145 @@ namespace EASYTelegramSignalBot.ViewModels
         #endregion 
 
         #region Telegram Messages
-        public void SendSignalMessage(string symbol, Dictionary<string, List<object>> values, Enums.SignalType type)
+        public void SendSignalMessage(string symbol, TDIResult values, Enums.SignalType type)
         {
             string message = type switch
             {
-                Enums.SignalType.StrongSell => Settings.BotsSettings.TDISettings.SignalMessages.Sell + "\n(Güçlü Sat)",
-                Enums.SignalType.MediumSell => Settings.BotsSettings.TDISettings.SignalMessages.Sell + "\n(Sat)",
-                Enums.SignalType.StrongBuy => Settings.BotsSettings.TDISettings.SignalMessages.Buy + "\n(Güçlü Al)",
-                Enums.SignalType.MediumBuy => Settings.BotsSettings.TDISettings.SignalMessages.Buy + "\n(Al)",
+                Enums.SignalType.StrongSell => Settings.BotsSettings.TDISettings.SignalMessages.Sell,
+                Enums.SignalType.MediumSell => Settings.BotsSettings.TDISettings.SignalMessages.Sell,
+                Enums.SignalType.StrongBuy => Settings.BotsSettings.TDISettings.SignalMessages.Buy,
+                Enums.SignalType.MediumBuy => Settings.BotsSettings.TDISettings.SignalMessages.Buy,
                 _ => "",
             };
 
             if (string.IsNullOrEmpty(message)) return;
 
-            message = message.Replace("{Symbol}", symbol).Replace("{Price}", Math.Round(((Kline)values["Klines"].Last()).Close, 2).ToString());
+            string signalTypeString = type switch
+            {
+                Enums.SignalType.StrongSell => "Güçlü Sat",
+                Enums.SignalType.MediumSell => "Sat",
+                Enums.SignalType.StrongBuy => "Güçlü Al",
+                Enums.SignalType.MediumBuy => "Al",
+                _ => "?",
+            };
+
+            string periotShortString = Model.KlineInterval switch
+            {
+                KlineInterval.OneSecond => "1sn",
+                KlineInterval.OneMinute => "1dk",
+                KlineInterval.ThreeMinutes => "3dk",
+                KlineInterval.FiveMinutes => "5dk",
+                KlineInterval.FifteenMinutes => "15dk",
+                KlineInterval.ThirtyMinutes => "30dk",
+                KlineInterval.OneHour => "1s",
+                KlineInterval.TwoHour => "2s",
+                KlineInterval.FourHour => "4s",
+                KlineInterval.SixHour => "6s",
+                KlineInterval.EightHour => "8s",
+                KlineInterval.TwelveHour => "12s",
+                KlineInterval.OneDay => "1g",
+                KlineInterval.ThreeDay => "3g",
+                KlineInterval.OneWeek => "1h",
+                KlineInterval.OneMonth => "1a",
+                _ => $"{(int)Model.KlineInterval / 3600}s"
+            };
+
+            string periotLongString = Model.KlineInterval switch
+            {
+                KlineInterval.OneSecond => "1 Saniye",
+                KlineInterval.OneMinute => "1 Dakika",
+                KlineInterval.ThreeMinutes => "3 Dakika",
+                KlineInterval.FiveMinutes => "5 Dakika",
+                KlineInterval.FifteenMinutes => "15 Dakika",
+                KlineInterval.ThirtyMinutes => "30 Dakika",
+                KlineInterval.OneHour => "1 Saat",
+                KlineInterval.TwoHour => "2 Saat",
+                KlineInterval.FourHour => "4 Saat",
+                KlineInterval.SixHour => "6 Saat",
+                KlineInterval.EightHour => "8 Saat",
+                KlineInterval.TwelveHour => "12 Saat",
+                KlineInterval.OneDay => "1 Gün",
+                KlineInterval.ThreeDay => "3 Gün",
+                KlineInterval.OneWeek => "1 Hafta",
+                KlineInterval.OneMonth => "1 Ay",
+                _ => $"{(int)Model.KlineInterval / 3600}s"
+            };
+
+
+            Binance.Net.Objects.Models.Spot.BinanceSymbol? exchangeInfo = StaticBinance.ExchangeInfos.Spot.First(x => x.Name == symbol);
+            Kline? lastKline = values.Klines.Last();
+
+            var tickSize = exchangeInfo.PriceFilter?.TickSize ?? (decimal)0.00000001;
+
+            string priceTrend = values.Klines[^2].Close > values.Klines[^1].Close ? " ⬇️" : " ⬆️";
+            string price = Binance.Net.BinanceHelpers.FloorPrice(tickSize, lastKline.Close).ToString() + priceTrend;
+
+            string lastBuySignalClose = "";
+            if(values.LastBuySignalClose != null)
+            {
+                lastBuySignalClose = "\nGiriş Fiyatı  → " + Binance.Net.BinanceHelpers.FloorPrice(tickSize, (decimal)values.LastBuySignalClose).ToString();
+            }
+
+            double support, resistance;
+            string supportText, resistanceText;
+            if (values.PivotPoints == null) 
+            {
+                resistanceText = "?";
+                supportText = "?";
+            }
+            else
+            {
+                support = values.PivotPoints.Last().Values.Where(x => x < (double)lastKline.Close).Max();
+                supportText = Binance.Net.BinanceHelpers.FloorPrice(tickSize, (decimal)support).ToString();
+            
+                resistance = values.PivotPoints.Last().Values.Where(x => x > (double)lastKline.Close).Min();
+                resistanceText = Binance.Net.BinanceHelpers.FloorPrice(tickSize, (decimal)resistance).ToString();
+            }
+            
+            string rsiTrend = values.RSI[^2] > values.RSI[^1] ? " ⬇️" : " ⬆️";
+            string rsi = Math.Round(values.RSI.Last(), 2).ToString() + rsiTrend;
+
+            string rsiplTrend = values.RSI_PL[^2] > values.RSI_PL[^1] ? " ⬇️" : " ⬆️";
+            string rsipl = Math.Round(values.RSI_PL.Last(), 2).ToString() + rsiplTrend;
+
+            string tslTrend = values.TSL[^2] > values.TSL[^1] ? " ⬇️" : " ⬆️";
+            string tsl = Math.Round(values.TSL.Last(), 2).ToString() + tslTrend;
+
+            string upperbbTrend = values.UpperBB[^2] > values.UpperBB[^1] ? " ⬇️" : " ⬆️";
+            string upperbb = Binance.Net.BinanceHelpers.FloorPrice(exchangeInfo.PriceFilter.TickSize, (decimal)values.UpperBB.Last()).ToString() + upperbbTrend;
+
+            string lowerbbTrend = values.LowerBB[^2] > values.LowerBB[^1] ? " ⬇️" : " ⬆️";
+            string lowerbb= Binance.Net.BinanceHelpers.FloorPrice(exchangeInfo.PriceFilter.TickSize, (decimal)values.LowerBB.Last()).ToString() + lowerbbTrend;
+
+            string sma25Trend = values.SMA25[^2] > values.SMA25[^1] ? " ⬇️" : " ⬆️";
+            string sma25 = Binance.Net.BinanceHelpers.FloorPrice(exchangeInfo.PriceFilter.TickSize, (decimal)values.SMA25.Last()).ToString() + sma25Trend;
+
+            string sma50Trend = values.SMA50[^2] > values.SMA50[^1] ? " ⬇️" : " ⬆️";
+            string sma50 = Binance.Net.BinanceHelpers.FloorPrice(exchangeInfo.PriceFilter.TickSize, (decimal)values.SMA50.Last()).ToString() + sma50Trend;
+
+            string sma75Trend = values.SMA75[^2] > values.SMA75[^1] ? " ⬇️" : " ⬆️";
+            string sma75 = Binance.Net.BinanceHelpers.FloorPrice(exchangeInfo.PriceFilter.TickSize, (decimal)values.SMA75.Last()).ToString() + sma75Trend;
+
+            string sma100Trend = values.SMA100[^2] > values.SMA100[^1] ? " ⬇️" : " ⬆️";
+            string sma100 = Binance.Net.BinanceHelpers.FloorPrice(exchangeInfo.PriceFilter.TickSize, (decimal)values.SMA100.Last()).ToString() + sma100Trend;
+
+            message = message.Replace("{Symbol}", symbol).
+                Replace("{Price}", price)
+                .Replace("{SignalType}", signalTypeString)
+                .Replace("{PeriotLong}", periotLongString)
+                .Replace("{PeriotShort}", periotShortString)
+                .Replace("{LastBuySignalClose}", lastBuySignalClose)
+                .Replace("{RSI}", rsi)
+                .Replace("{RSI_PL}", rsipl)
+                .Replace("{TSL}", tsl)
+                .Replace("{UpperBB}", upperbb)
+                .Replace("{LowerBB}", lowerbb)
+                .Replace("{Support}", supportText)
+                .Replace("{Resistance}", resistanceText)
+                .Replace("{SMA25}", sma25)
+                .Replace("{SMA50}", sma50)
+                .Replace("{SMA75}", sma75)
+                .Replace("{SMA100}", sma100);
 
             Telegram.Bots.TDI.SendMessages(message, symbol);
         }

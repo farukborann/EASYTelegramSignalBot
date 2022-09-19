@@ -92,13 +92,40 @@
                     <TextBlock Text="Buy Sinyal Mesajı" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
                     <TextBox Name="LongSignalMessageTextBox" Grid.Row="2" Text="{Binding Model.BuySignalString}" AcceptsReturn="True" TextWrapping="Wrap" Margin="25,10,25,15" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
 
-                    <TextBlock Text="Sell Sinyal Mesajı" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                    <TextBox Name="ShortSignalMessageTextBox" Grid.Row="4" Text="{Binding Model.SellSignalString}" AcceptsReturn="True" TextWrapping="Wrap" Margin="25,10,25,15" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                    <TextBlock Text="Sell Sinyal Mesajı" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <TextBox Name="ShortSignalMessageTextBox" Grid.Row="2" Grid.Column="2" Text="{Binding Model.SellSignalString}" AcceptsReturn="True" TextWrapping="Wrap" Margin="25,10,25,15" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
 
-                    <TextBlock Text="Exit Sinyal Mesajı" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                    <TextBox Name="ExitSignalMessageTextBox" Grid.Row="2" Grid.Column="1" Text="{Binding Model.ExitSignalString}" AcceptsReturn="True" TextWrapping="Wrap" Margin="25,10,25,15" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
-
-                    <TextBlock Text="Mesaj Parametreleri > {Symbol} | Sembol Adı ||| {Price} | Son Fiyat" Grid.Row="3" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left" />
+                    <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Center" >
+                        <Run Text="   Mesaj Parametreleri" />
+                        <LineBreak />
+                        <Run Text=" {Symbol} → Sembol Adı" />
+                        <LineBreak />
+                        <Run Text=" {Price} → Son Fiyat" />
+                        <LineBreak />
+                        <Run Text=" {SignalType} → Sinyal Tipi" />
+                        <LineBreak />
+                        <Run Text=" {PeriotShort} → Kısa Periot Adı" />
+                        <LineBreak />
+                        <Run Text=" {PeriotLong} → Uzun Periot Adı" />
+                        <LineBreak />
+                        <Run Text=" {RSI} → RSI Değeri" />
+                        <LineBreak />
+                        <Run Text=" {RSI_PL} → RSI Price Line Değeri" />
+                        <LineBreak />
+                        <Run Text=" {TSL} → Trend Signal Line Değeri" />
+                        <LineBreak />
+                        <Run Text=" {UpperBB} → Üst Bollinger Band Değeri" />
+                        <LineBreak />
+                        <Run Text=" {LowerBB} → Alt Bollinger Band Değeri" />
+                        <LineBreak />
+                        <Run Text=" {Support} → Destek Noktası" />
+                        <LineBreak />
+                        <Run Text=" {Resistance} → Direnç Noktası" />
+                        <LineBreak />
+                        <Run Text=" {SMAxx} → xx (25,50,75,100) Periyot Sma Değeri" />
+                        <LineBreak />
+                        <Run Text=" {LastBuySignalClose} → Son Al Sinyalinin Fiyatı" />
+                    </TextBlock>
 
                     <Grid Grid.Row="4" Grid.Column="1" HorizontalAlignment="Center">
                         <Grid.RowDefinitions>

@@ -53,7 +53,7 @@ namespace EASYTelegramSignalBot.Telegram.Models
         {
             string text = "Hoşgeldiniz\nBilinmeyen bir mesaj attınız.\nLütfen mesajınızı kontrol edip tekrar deneyin.";
 
-            Task.Run(() => 
+            Task.Run(() =>
             BotClient.SendTextMessageAsync(chatId: message.Chat.Id, text: text));
             return null;
         }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace EASYTelegramSignalBot.UI.Helpers
 {
@@ -9,7 +8,7 @@ namespace EASYTelegramSignalBot.UI.Helpers
     {
         private bool isDisposed;
 
-        Dictionary<string, Tuple<bool, Action?>> PageIsReady { get; set; }
+        private Dictionary<string, Tuple<bool, Action?>> PageIsReady { get; set; }
 
         public UILoader()
         {
@@ -28,7 +27,7 @@ namespace EASYTelegramSignalBot.UI.Helpers
 
             if (PageIsReady.Values.All(x => x.Item1 == true))
             {
-                foreach (var item in PageIsReady.Values)
+                foreach (Tuple<bool, Action?>? item in PageIsReady.Values)
                 {
                     if (item.Item2 == null) continue;
                     //Task.Run(() => item.Item2);

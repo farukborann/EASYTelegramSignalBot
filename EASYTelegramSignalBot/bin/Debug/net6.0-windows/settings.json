@@ -6,8 +6,7 @@
   },
   "TelegramSettings": {
     "TDIGroups": [
-      "-1001603147247",
-      "kmkll"
+      "-1001603147247"
     ],
     "TDIBot": "5190701377:AAHwyv2WCJOXoKyqApTSNWNnzf8AUO5fIZk",
     "PACGroups": [
@@ -27,11 +26,20 @@
     "UpdateExpiredUsersTickMunite": 1.0,
     "TDISettings": {
       "Symbols": [
-        "BTCUSDT"
+        "BTCUSDT",
+        "ETHUSDT",
+        "BNBUSDT",
+        "BCCUSDT",
+        "NEOUSDT",
+        "LTCUSDT",
+        "QTUMUSDT",
+        "ADAUSDT",
+        "XRPUSDT",
+        "EOSUSDT"
       ],
       "SignalMessages": {
-        "Buy": "EASY TDI Bot\r\n\r\nAlım Sinyali Geldi => {Symbol}\r\nGiriş Fiyatı => {Price}",
-        "Sell": "EASY TDI Bot\r\n\r\nSat Sinyali Geldi => {Symbol}\r\nSatış Fiyatı => {Price}",
+        "Buy": "🇹🇷*HIYAR ANALİZ SPOT BOT*🇹🇷\r\n👉*{Symbol}* ({PeriotShort}) *{SignalType}* Sinyali Geldi👈\r\nGiriş Fiyatı  → {Price}\r\n\r\nRSI  → {RSI}\r\nRSI Fiyat Çizgisi  → {RSI_PL}\r\nTrend Sinyal Çizgisi  → {TSL}\r\n\r\nÜst Bollinger  → {UpperBB}\r\nAlt Bollinger  → {LowerBB}\r\n\r\nDestek Noktası → {Support}\r\nDirenç Noktası → {Resistance}\r\n\r\nSMA25 → {SMA25}\r\nSMA50 → {SMA50}\r\nSMA75 → {SMA75}\r\nSMA100 → {SMA100}\r\n\r\n{PeriotLong} grafiği baz alınmıştır.\r\nSinyallerin  tamamı matematiksel methodlara dayanan hesaplama yöntemleri kullanılarak üretilmiştir. Yatırım tavsiyesi değildir, lütfen stop kullanmayı unutmayalım !!!",
+        "Sell": "🇹🇷*HIYAR ANALİZ SPOT BOT*🇹🇷\r\n👉*{Symbol}* ({PeriotShort}) *{SignalType}* Sinyali Geldi👈{LastBuySignalClose}\r\nÇıkış Fiyatı  → {Price}\r\n\r\nRSI  → {RSI}\r\nRSI Fiyat Çizgisi  → {RSI_PL}\r\nTrend Sinyal Çizgisi  → {TSL}\r\n\r\nÜst Bollinger  → {UpperBB}\r\nAlt Bollinger  → {LowerBB}\r\n\r\nDestek Noktası → {Support}\r\nDirenç Noktası → {Resistance}\r\n\r\nSMA25 → {SMA25}\r\nSMA50 → {SMA50}\r\nSMA75 → {SMA75}\r\nSMA100 → {SMA100}\r\n\r\n{PeriotLong} grafiği baz alınmıştır.\r\nSinyallerin  tamamı matematiksel methodlara dayanan hesaplama yöntemleri kullanılarak üretilmiştir. Yatırım tavsiyesi değildir, lütfen stop kullanmayı unutmayalım !!!",
         "Exit": "EASY TDI Bot\r\n\r\nÇık Sinyali Geldi => {Symbol}\r\nÇıkış Fiyatı => {Price}"
       },
       "RSIPeriot": 13,
@@ -41,7 +49,7 @@
       "RSIOversoldLevel": 31,
       "RSIOverboughtLevet": 69,
       "MinSignalPeriot": 300,
-      "KlineInterval": "FourHour"
+      "KlineInterval": "OneMinute"
     },
     "PACSettings": {
       "Symbols": [],
@@ -55,11 +63,22 @@
       "KlineInterval": "FiveMinutes"
     },
     "RSISettings": {
-      "Symbols": [],
+      "Symbols": [
+        "BTCUSDT",
+        "ETHUSDT",
+        "BNBUSDT",
+        "BCCUSDT",
+        "NEOUSDT",
+        "LTCUSDT",
+        "QTUMUSDT",
+        "ADAUSDT",
+        "XRPUSDT",
+        "EOSUSDT"
+      ],
       "SignalMessages": {
-        "Overbought": "EASY RSI Bot\r\n\r\nRSI aşırı alımı aştı => {Symbol}\r\nAnlık Fiyat => {Price}\r\nRSI Seviyesi => {RSI}",
-        "Oversold": "EASY RSI Bot\r\n\r\nRSI aşırı satışı aştı => {Symbol}\r\nAnlık Fiyat => {Price}\r\nRSI Seviyesi => {RSI}",
-        "BetweenLevels": "EASY RSI Bot\r\n\r\nRSI yola geldi => {Symbol}\r\nAnlık Fiyat => {Price}\r\nRSI Seviyesi => {RSI}"
+        "Overbought": "🇹🇷*HIYAR ANALİZ RSI BOT*🇹🇷\r\n👉*{Symbol}* Sinyali Geldi👈\r\n\r\nRSI *satış* bölgesine geldi !\r\nAnlık Fiyat => {Price}\r\nRSI Seviyesi => {RSI}\r\n\r\n{PeriotLong} grafiği baz alınmıştır.\r\nYatırım tavsiyesi değildir, lütfen stop kullanmayı unutmayalım !!!",
+        "Oversold": "🇹🇷*HIYAR ANALİZ RSI BOT*🇹🇷\r\n👉*{Symbol}* Sinyali Geldi👈\r\n\r\nRSI *toplama* bölgesine geldi !\r\nAnlık Fiyat => {Price}\r\nRSI Seviyesi => {RSI}\r\n\r\n{PeriotLong} grafiği baz alınmıştır.\r\nYatırım tavsiyesi değildir, lütfen stop kullanmayı unutmayalım !!!",
+        "BetweenLevels": ""
       },
       "RSIPeriot": 14,
       "RSIOversoldLevel": 28,

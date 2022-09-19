@@ -29,11 +29,6 @@ namespace EASYTelegramSignalBot.Finance.Binance
         public decimal Close { get => _Close; set => _Close = value; }
         public decimal Volume { get => _Volume; set => _Volume = value; }
 
-        public bool IsBullCandle { 
-            get
-            {
-                return Close > Open;
-            }
-        }
+        public bool IsBullCandle => Close > Open;
     }
 }

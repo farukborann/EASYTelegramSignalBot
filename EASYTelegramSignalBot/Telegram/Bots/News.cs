@@ -59,12 +59,11 @@ namespace EASYTelegramSignalBot.Telegram.Bots
 
         public static void SendMessages(string message)
         {
-            var Users = Connection.Context.Users.Where(x => x.ChatId != 0 && x.News);
+            IEnumerable<Database.Models.User>? Users = Connection.Context.Users.Where(x => x.ChatId != 0 && x.News);
             foreach (Database.Models.User user in Connection.Context.Users)
             {
                 try
                 {
-                    //if (user.ChatId == 0 || !user.News) continue;
                     Clients.NewsClient.SendTextMessageAsync(user.ChatId, message, parseMode: ParseMode.Markdown);
                 }
                 catch (Exception ex)

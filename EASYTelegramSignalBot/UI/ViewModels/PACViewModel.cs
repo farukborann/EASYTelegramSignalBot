@@ -3,10 +3,9 @@ using EASYTelegramSignalBot.Database;
 using EASYTelegramSignalBot.Database.Models;
 using EASYTelegramSignalBot.Finance;
 using EASYTelegramSignalBot.Finance.Binance;
-using EASYTelegramSignalBot.Finance.Indicators;
+using EASYTelegramSignalBot.Finance.Indicators.PAC;
 using EASYTelegramSignalBot.Finance.Models;
 using EASYTelegramSignalBot.Models;
-using EASYTelegramSignalBot.Telegram;
 using EASYTelegramSignalBot.UI.Helpers;
 using LiveCharts;
 using LiveCharts.Defaults;
@@ -17,7 +16,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Telegram.Bot;
 
 namespace EASYTelegramSignalBot.ViewModels
 {
@@ -64,7 +62,7 @@ namespace EASYTelegramSignalBot.ViewModels
             {
                 try
                 {
-                    Model.Symbols.Add(new PAC(symbol, Model.KlineInterval, (string symbol, Dictionary<string, List<object>> values) => { }, SendSignalMessage, true) { });
+                    Model.Symbols.Add(new PAC(symbol, Model.KlineInterval, (string symbol, PACResult values) => { }, SendSignalMessage, true) { });
                 }
                 catch (Exception ex)
                 {
@@ -81,20 +79,20 @@ namespace EASYTelegramSignalBot.ViewModels
 
         private Task Continue()
         {
-            foreach (Indicator? symbol in Model.Symbols) symbol.Continue();
+            foreach (PAC? symbol in Model.Symbols) symbol.Continue();
             return Task.CompletedTask;
         }
 
         #region LiveCharts
-        public void UpdateUI(string symbol, Dictionary<string, List<object>> Values)
+        public void UpdateUI(string symbol, PACResult Values)
         {
             if (symbol != Model.UISymbol) return;
 
-            List<Kline>? Klines = Values["Klines"].Select(x => (Kline)x).ToList();
+            List<Kline>? Klines = Values.Klines.ToList();
             UpdateKlines(Klines);
 
-            List<object>? TOC = Values["TOC"].ToList();
-            List<object>? BOC = Values["BOC"].ToList();
+            List<object>? TOC = Values.TOC.Select(x => (object)x).ToList();
+            List<object>? BOC = Values.BOC.Select(x => (object)x).ToList();
             UpdateIndicators(Klines, TOC, BOC);
         }
 
@@ -106,7 +104,7 @@ namespace EASYTelegramSignalBot.ViewModels
 
             if (Model.Symbols.Any(x => x.Symbol == Model.UISymbol))
             {
-                Model.Symbols.First(x => x.Symbol == Model.UISymbol).UpdateAction = (string symbol, Dictionary<string, List<object>> values) => { };
+                Model.Symbols.First(x => x.Symbol == Model.UISymbol).UpdateAction = (string symbol, PACResult values) => { };
             }
             Model.KlineSeriesCollection.ToList().ForEach(x => x.Values.Clear());
             Model.IndicatorsSeriesCollection.ToList().ForEach(x => x.Values.Clear());
@@ -336,7 +334,7 @@ namespace EASYTelegramSignalBot.ViewModels
 
         private void _AddSymbol(string symbol)
         {
-            Model.Symbols.Add(new PAC(symbol, Binance.Net.Enums.KlineInterval.OneMinute, (string symbol, Dictionary<string, List<object>> values) => { }, SendSignalMessage) { });
+            Model.Symbols.Add(new PAC(symbol, Binance.Net.Enums.KlineInterval.OneMinute, (string symbol, PACResult values) => { }, SendSignalMessage) { });
             Settings.BotsSettings.PACSettings.Symbols.Add(symbol);
             Settings.SaveSettings();
         }
@@ -363,7 +361,7 @@ namespace EASYTelegramSignalBot.ViewModels
         #endregion 
 
         #region Telegram Messages
-        public void SendSignalMessage(string symbol, Dictionary<string, List<object>> values, Enums.SignalType type)
+        public void SendSignalMessage(string symbol, PACResult values, Enums.SignalType type)
         {
             string message = type switch
             {
@@ -374,10 +372,10 @@ namespace EASYTelegramSignalBot.ViewModels
             };
 
             if (string.IsNullOrEmpty(message)) return;
-            message = message.Replace("{Symbol}", symbol).Replace("{Price}", Math.Round(((Kline)values["Klines"].Last()).Close, 2).ToString());
-            if (type == Enums.SignalType.Short) message = message.Replace("{Channel}", Math.Round((double)values["BOC"].Last(), 2).ToString());
-            else if (type == Enums.SignalType.Long) message = message.Replace("{Channel}", Math.Round((double)values["TOC"].Last(), 2).ToString());
-            else message = message.Replace("{Channel}", Math.Round((double)values["TOC"].Last(), 2).ToString() + " <=>" + Math.Round((double)values["BOC"].Last(), 2).ToString());
+            message = message.Replace("{Symbol}", symbol).Replace("{Price}", Math.Round(values.Klines.Last().Close, 2).ToString());
+            if (type == Enums.SignalType.Short) message = message.Replace("{Channel}", Math.Round(values.BOC.Last(), 2).ToString());
+            else if (type == Enums.SignalType.Long) message = message.Replace("{Channel}", Math.Round(values.TOC.Last(), 2).ToString());
+            else message = message.Replace("{Channel}", Math.Round((double)values.TOC.Last(), 2).ToString() + " <=>" + Math.Round((double)values.BOC.Last(), 2).ToString());
 
             Telegram.Bots.PAC.SendMessages(message, symbol);
         }

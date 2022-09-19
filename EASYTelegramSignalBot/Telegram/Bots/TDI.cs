@@ -43,13 +43,13 @@ namespace EASYTelegramSignalBot.Telegram.Bots
                 {
                     if (x.Value < DateTime.Now)
                     {
-                        text += $"TDI Bot {x.Key} üyeliğiniz bitmiştir\n";
+                        text += $"{x.Key} üyeliğiniz bitmiştir\n";
                         user.TDISymbols.Remove(x.Key);
                         Connection.Context.SaveChanges();
                         return;
                     }
 
-                    text += $"TDI Bot {x.Key} üyeliğinizin bitiş tarihi {x.Value}\n";
+                    text += $"{x.Key} üyeliğinizin bitiş tarihi {x.Value}\n";
 
                 });
             }
@@ -65,13 +65,12 @@ namespace EASYTelegramSignalBot.Telegram.Bots
 
         public static void SendMessages(string message, string symbol)
         {
-            var Users = Connection.Context.Users.Where(x => x.ChatId != 0 && x.TDI && x.TDISymbols.ContainsKey(symbol) && x.TDISymbols[symbol] > DateTime.Now);
+            IEnumerable<Database.Models.User>? Users = Connection.Context.Users.Where(x => x.ChatId != 0 && x.TDI && x.TDISymbols.ContainsKey(symbol) && x.TDISymbols[symbol] > DateTime.Now);
             foreach (Database.Models.User user in Users)
             {
                 try
                 {
-                    //if (user.ChatId == 0 || !user.TDISymbols.Any(x => x.Key.Equals(symbol) && x.Value > DateTime.Now)) continue;
-                    Clients.TDIClient.SendTextMessageAsync(user.ChatId, message);
+                    Clients.TDIClient.SendTextMessageAsync(user.ChatId, message, ParseMode.Markdown);
                 }
                 catch (Exception ex)
                 {
@@ -84,7 +83,7 @@ namespace EASYTelegramSignalBot.Telegram.Bots
             {
                 try
                 {
-                    Clients.TDIClient.SendTextMessageAsync(group, message);
+                    Clients.TDIClient.SendTextMessageAsync(group, message, ParseMode.Markdown);
                 }
                 catch (Exception ex)
                 {

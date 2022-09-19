@@ -63,7 +63,7 @@ namespace EASYTelegramSignalBot.Finance.Binance
 
         private void RunFuncs(DataEvent<IBinanceStreamKlineData> data)
         {
-            try
+            try /********************************* fix it*/
             {
                 if (!Klines.Last().Date.Equals(data.Data.Data.OpenTime))
                 {
@@ -117,22 +117,32 @@ namespace EASYTelegramSignalBot.Finance.Binance
 
         public void GetKlines()
         {
-            if (Limit <= 1500)
+            int maxCount = Type switch
+            {
+                Enums.SubscriptionType.CoinFutures => 1500,
+                Enums.SubscriptionType.UsdFutures => 1500,
+                Enums.SubscriptionType.Spot => 1000,
+            };
+
+            if (Limit <= maxCount)
             {
                 Klines = GetKlinesAsync(Symbol, Interval, Limit);
                 return;
             }
 
-            Klines = GetKlinesAsync(Symbol, Interval, 1500);
-            int GetKlinesCount = Limit - 1500;
-            for (; GetKlinesCount > 1500; GetKlinesCount -= 1500)
+            Klines = GetKlinesAsync(Symbol, Interval, maxCount);
+
+            int GetKlinesCount = Limit - maxCount;
+            for (; GetKlinesCount >= maxCount; GetKlinesCount -= maxCount)
             {
-                GetKlinesAsync(Symbol, Interval, 1500, endTime: Klines[0].Date.AddSeconds(-1 * (int)Interval)).ForEach(x => Klines.Add(x));
+                List<Kline>? newKlines = GetKlinesAsync(Symbol, Interval, maxCount, endTime: Klines[0].Date.AddSeconds(-1 * (int)Interval));//.ForEach(x => Klines.Add(x));
+                Klines.InsertRange(0, newKlines);
             }
 
             if (GetKlinesCount > 0)
             {
-                GetKlinesAsync(Symbol, Interval, GetKlinesCount).ForEach(x => Klines.Add(x));
+                List<Kline>? newKlines = GetKlinesAsync(Symbol, Interval, GetKlinesCount);//.ForEach(x => Klines.Add(x));
+                Klines.InsertRange(0, newKlines);
             }
         }
 

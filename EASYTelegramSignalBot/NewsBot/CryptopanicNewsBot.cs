@@ -1,14 +1,10 @@
-﻿using EASYTelegramSignalBot.Database.Models;
-using EASYTelegramSignalBot.NewsBot.Helpers;
+﻿using EASYTelegramSignalBot.NewsBot.Helpers;
 using EASYTelegramSignalBot.NewsBot.Models;
-using EASYTelegramSignalBot.Telegram;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Threading;
-using Telegram.Bot;
-using TeleApi = Telegram.Bot;
 
 namespace EASYTelegramSignalBot.NewsBot
 {

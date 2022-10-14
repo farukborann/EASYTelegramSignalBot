@@ -125,10 +125,11 @@ namespace EASYTelegramSignalBot.Models
         public bool IsAddSymbolButtonEnabled => !string.IsNullOrEmpty(addSymbolString);
 
         //Groups
-        public static List<string>? GroupIds
+        public ObservableCollection<string>? groupIds;
+        public ObservableCollection<string>? GroupIds
         {
-            get => Settings.TelegramSettings.PACGroups;
-            set => Settings.TelegramSettings.PACGroups = value ?? new();
+            get { if (groupIds == null) { groupIds = new(); Settings.TelegramSettings.PACGroups.ForEach(x => groupIds.Add(x)); } return groupIds; }
+            set { groupIds = value; PropertyChanged?.InvokeAll(nameof(GroupIds)); }
         }
 
         private string? selectedGroup;

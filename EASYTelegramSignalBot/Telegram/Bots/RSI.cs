@@ -48,9 +48,11 @@ namespace EASYTelegramSignalBot.Telegram.Bots
             return null;
         }
 
-        public static void SendMessages(string message)
+        public static void SendMessages(string message, string symbol)
         {
-            IEnumerable<Database.Models.User>? Users = Database.Connection.Context.Users.Where(x => x.ChatId != 0);
+            IEnumerable<Database.Models.User>? Users = Database.Connection.Context.Users.Where(x => x.ChatId != 0 && 
+            ((x.PACSymbols.ContainsKey(symbol) && x.PACSymbols[symbol] > DateTime.Now) || 
+            (x.TDISymbols.ContainsKey(symbol) && x.TDISymbols[symbol] > DateTime.Now)));
             foreach (Database.Models.User user in Users)
             {
                 try

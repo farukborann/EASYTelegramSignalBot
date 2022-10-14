@@ -211,6 +211,7 @@ namespace EASYTelegramSignalBot.ViewModels
             if (string.IsNullOrEmpty(Model.AddGroupString)) return;
             Settings.TelegramSettings.RSIGroups.Add(Model.AddGroupString);
             Settings.SaveSettings();
+            Model.GroupIds?.Add(Model.AddGroupString);
             MessageBox.Show("Grup başarıyla eklendi", "Grup Eklendi", MessageBoxButton.OK);
         }
 
@@ -218,6 +219,7 @@ namespace EASYTelegramSignalBot.ViewModels
         {
             Settings.TelegramSettings.RSIGroups.Remove(Model.SelectedGroup ?? "");
             Settings.SaveSettings();
+            Model.GroupIds?.Remove(Model.SelectedGroup ?? "");
             MessageBox.Show("Grup başarıyla silindi", "Grup Silindi", MessageBoxButton.OK);
         }
         #endregion  
@@ -368,7 +370,7 @@ namespace EASYTelegramSignalBot.ViewModels
                 .Replace("{PeriotLong}", periotLongString)
                 .Replace("{PeriotShort}", periotShortString);
 
-            Telegram.Bots.RSI.SendMessages(message);
+            Telegram.Bots.RSI.SendMessages(message, symbol);
         }
         #endregion
 

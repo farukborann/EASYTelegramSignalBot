@@ -32,7 +32,7 @@ namespace EASYTelegramSignalBot.Finance.Indicators.TDI
             this.isPaused = isPaused;
         }
 
-        private void Indicate(List<Kline> data)
+        private void Indicate(List<Kline> data) /* fix values will be null */
         {
             if (isPaused) return;
             if (LastSignalTime.AddSeconds(Settings.BotsSettings.TDISettings.MinSignalPeriot) > DateTime.Now) return;

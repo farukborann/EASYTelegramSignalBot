@@ -280,6 +280,7 @@ namespace EASYTelegramSignalBot.ViewModels
             if (string.IsNullOrEmpty(Model.AddGroupString)) return;
             Settings.TelegramSettings.PACGroups.Add(Model.AddGroupString);
             Settings.SaveSettings();
+            Model.GroupIds?.Add(Model.AddGroupString);
             MessageBox.Show("Grup başarıyla eklendi", "Grup Eklendi", MessageBoxButton.OK);
         }
 
@@ -287,6 +288,7 @@ namespace EASYTelegramSignalBot.ViewModels
         {
             Settings.TelegramSettings.PACGroups.Remove(Model.SelectedGroup ?? "");
             Settings.SaveSettings();
+            Model.GroupIds?.Remove(Model.SelectedGroup ?? "");
             MessageBox.Show("Grup başarıyla silindi", "Grup Silindi", MessageBoxButton.OK);
         }
         #endregion  

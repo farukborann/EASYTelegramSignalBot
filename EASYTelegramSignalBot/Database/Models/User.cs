@@ -69,14 +69,14 @@ namespace EASYTelegramSignalBot.Database.Models
 
         public void UpdateUserSymbols()
         {
-            TDISymbols = JsonConvert.DeserializeObject<Dictionary<string, DateTime>>(user.TDISymbolValues ?? "{}") ?? new();
-            PACSymbols = JsonConvert.DeserializeObject<Dictionary<string, DateTime>>(user.PACSymbolValues ?? "{}") ?? new();
+            TDISymbols = JsonConvert.DeserializeObject<Dictionary<string, DateTime>>(user.TDISymbolValues ?? "{}", new JsonSerializerSettings() { DateFormatString = "dd/MM/yyyy hh:mm:ss" }) ?? new();
+            PACSymbols = JsonConvert.DeserializeObject<Dictionary<string, DateTime>>(user.PACSymbolValues ?? "{}", new JsonSerializerSettings() { DateFormatString = "dd/MM/yyyy hh:mm:ss" }) ?? new();
         }
 
         public void SaveUserSymbols()
         {
-            user.TDISymbolValues = JsonConvert.SerializeObject(TDISymbols);
-            user.PACSymbolValues = JsonConvert.SerializeObject(PACSymbols);
+            user.TDISymbolValues = JsonConvert.SerializeObject(TDISymbols, new JsonSerializerSettings() { DateFormatString = "dd/MM/yyyy hh:mm:ss" });
+            user.PACSymbolValues = JsonConvert.SerializeObject(PACSymbols, new JsonSerializerSettings() { DateFormatString = "dd/MM/yyyy hh:mm:ss" });
         }
 
         public Entities.User GetOriginalEntity()

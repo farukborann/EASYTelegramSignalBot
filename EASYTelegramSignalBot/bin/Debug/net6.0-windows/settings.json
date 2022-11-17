@@ -27,11 +27,16 @@
     "TDISettings": {
       "Symbols": [
         "BTCUSDT",
-        "ETHUSDT"
+        "ETHUSDT",
+        "BNBUSDT",
+        "AVAXUSDT",
+        "SOLUSDT",
+        "DYDXUSDT",
+        "SHIBUSDT"
       ],
       "SignalMessages": {
-        "Buy": "🇹🇷👉*{Symbol}* ({PeriotShort}) *{SignalType}* Sinyali Geldi👈🇹🇷\r\nGiriş Fiyatı  → {Price}\r\n\r\nRSI  → {RSI}\r\nRSI Fiyat Çizgisi  → {RSI_PL}\r\nTrend Sinyal Çizgisi  → {TSL}\r\n\r\nÜst Bollinger  → {UpperBB}\r\nAlt Bollinger  → {LowerBB}\r\n\r\nDestek Noktası → {Support}\r\nDirenç Noktası → {Resistance}\r\n\r\nSMA25 → {SMA25}\r\nSMA50 → {SMA50}\r\nSMA75 → {SMA75}\r\nSMA100 → {SMA100}\r\n\r\n{PeriotLong} grafiği baz alınmıştır.\r\nSinyallerin  tamamı matematiksel methodlara dayanan hesaplama yöntemleri kullanılarak üretilmiştir. Yatırım tavsiyesi değildir, lütfen stop kullanmayı unutmayalım !!!",
-        "Sell": "🇹🇷👉*{Symbol}* ({PeriotShort}) *{SignalType}* Sinyali Geldi👈🇹🇷{LastBuySignalClose}\r\nÇıkış Fiyatı  → {Price}\r\n\r\nRSI  → {RSI}\r\nRSI Fiyat Çizgisi  → {RSI_PL}\r\nTrend Sinyal Çizgisi  → {TSL}\r\n\r\nÜst Bollinger  → {UpperBB}\r\nAlt Bollinger  → {LowerBB}\r\n\r\nDestek Noktası → {Support}\r\nDirenç Noktası → {Resistance}\r\n\r\nSMA25 → {SMA25}\r\nSMA50 → {SMA50}\r\nSMA75 → {SMA75}\r\nSMA100 → {SMA100}\r\n\r\n{PeriotLong} grafiği baz alınmıştır.\r\nSinyallerin  tamamı matematiksel methodlara dayanan hesaplama yöntemleri kullanılarak üretilmiştir. Yatırım tavsiyesi değildir, lütfen stop kullanmayı unutmayalım !!!",
+        "Buy": "EASY TDI Bot\r\n\r\nAlım Sinyali Geldi => {Symbol}\r\nGiriş Fiyatı => {Price}",
+        "Sell": "EASY TDI Bot\r\n\r\nSat Sinyali Geldi => {Symbol}\r\nSatış Fiyatı => {Price}",
         "Exit": "EASY TDI Bot\r\n\r\nÇık Sinyali Geldi => {Symbol}\r\nÇıkış Fiyatı => {Price}"
       },
       "RSIPeriot": 13,
@@ -41,10 +46,18 @@
       "RSIOversoldLevel": 31,
       "RSIOverboughtLevet": 69,
       "MinSignalPeriot": 300,
-      "KlineInterval": "OneMinute"
+      "KlineInterval": "FourHour"
     },
     "PACSettings": {
-      "Symbols": [],
+      "Symbols": [
+        "BTCUSDT",
+        "ETHUSDT",
+        "BNBUSDT",
+        "AVAXUSDT",
+        "SOLUSDT",
+        "DYDXUSDT",
+        "SHIBUSDT"
+      ],
       "SignalMessages": {
         "Long": "EASY PAC Bot\r\n\r\nLong Sinyali Geldi => {Symbol}\r\nGiriş Fiyatı => {Price}\r\nKanal Değeri => {Channel}",
         "Short": "EASY PAC Bot\r\n\r\nShort Sinyali Geldi => {Symbol}\r\nGiriş Fiyatı => {Price}\r\nKanal Değeri => {Channel}",
@@ -55,7 +68,15 @@
       "KlineInterval": "FiveMinutes"
     },
     "RSISettings": {
-      "Symbols": [],
+      "Symbols": [
+        "BTCUSDT",
+        "ETHUSDT",
+        "BNBUSDT",
+        "AVAXUSDT",
+        "SOLUSDT",
+        "DYDXUSDT",
+        "SHIBUSDT"
+      ],
       "SignalMessages": {
         "Overbought": "EASY RSI Bot\r\n\r\nRSI aşırı alımı aştı => {Symbol}\r\nAnlık Fiyat => {Price}\r\nRSI Seviyesi => {RSI}",
         "Oversold": "EASY RSI Bot\r\n\r\nRSI aşırı satışı aştı => {Symbol}\r\nAnlık Fiyat => {Price}\r\nRSI Seviyesi => {RSI}",
